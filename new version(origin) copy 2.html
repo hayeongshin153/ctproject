@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>오늘은 어디로 가야할까? 수업 장소를 찾아라!</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; margin: 30px; }
+    h1 { color: darkblue; }
+    .section { margin-bottom: 20px; }
+    .box { border: 2px solid #888; padding: 10px; background-color: #f0f0f0; }
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+    table, th, td { border: 1px solid #333; padding: 8px; text-align: center; }
+    .timer { font-size: 20px; color: red; }
+    .highlight { background-color: #cfe2f3; }
+    .correct { background-color: #d4edda; }
+    .incorrect { background-color: #f8d7da; }
+  </style>
+</head>
+<body>
+  <h1>오늘은 어디로 가야할까? 수업 장소를 찾아라!</h1>
+  <h2>대상 및 교과: 자폐성장애학생(특수)</h2>
+
+  <div class="section">
+    <h3>문제 상황</h3>
+    <div class="box">
+      길동이는 수업 시간마다 교실이 바뀌는 것이 아직 익숙하지 않아요.<br>
+      그래서 매일 아침, 오늘 하루 수업 시간마다 수업 장소를 미리 확인하면 마음이 훨씬 편해진대요.<br>
+      길동이와 오늘 교시마다 이동해야 할 수업 장소를 예측해보세요.
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>지켜야할 규칙</h3>
+    <ul>
+      <li>① 색칠된 수업은 특수학급 교실에서 진행합니다.</li>
+      <li>② 색칠되지 않은 수업은 일반 교실 또는 별도의 장소에서 진행됩니다.</li>
+      <li>③ 과목별 수업 장소는 아래와 같습니다.</li>
+    </ul>
+    <table>
+      <tr><th>과목</th><th>장소</th></tr>
+      <tr><td>체육</td><td>운동장</td></tr>
+      <tr><td>과학</td><td>과학실</td></tr>
+      <tr><td>음악</td><td>음악실</td></tr>
+      <tr><td>미술</td><td>미술실</td></tr>
+      <tr><td>스포츠 클럽</td><td>탁구장</td></tr>
+      <tr><td>그외 과목</td><td>교실</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h3>길동이의 시간표</h3>
+    <table>
+      <tr><th>교시</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th></tr>
+      <tr><td>1교시</td><td>체육</td><td class="highlight">국어</td><td>수학</td><td class="highlight">과학</td><td>국어</td></tr>
+      <tr><td>2교시</td><td>도덕</td><td>체육</td><td class="highlight">영어</td><td>국어</td><td>사회</td></tr>
+      <tr><td>3교시</td><td class="highlight">국어</td><td>역사</td><td>도덕</td><td class="highlight">영어</td><td class="highlight">과학</td></tr>
+      <tr><td>4교시</td><td>미술</td><td>과학</td><td class="highlight">사회</td><td>기술</td><td>체육</td></tr>
+      <tr><td>5교시</td><td class="highlight">역사</td><td class="highlight">영어</td><td>자율</td><td>미술</td><td class="highlight">수학</td></tr>
+      <tr><td>6교시</td><td>과학</td><td>음악</td><td class="highlight">동아리</td><td><span>스포츠 클럽</span></td><td class="highlight">영어</td></tr>
+      <tr><td>7교시</td><td class="highlight">가정</td><td>가정</td><td></td><td class="highlight">수학</td><td></td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h3>문제 해결</h3>
+    <label>도전 요일 선택:
+      <select id="daySelect" onchange="generateProblem()">
+        <option value="월">월요일</option>
+        <option value="화">화요일</option>
+        <option value="수">수요일</option>
+        <option value="목">목요일</option>
+        <option value="금" selected>금요일</option>
+      </select>
+    </label><br><br>
+
+    <label>시간 선택:
+      <select id="timeSelect">
+        <option value="30">30초</option>
+        <option value="60">1분</option>
+        <option value="90">1분 30초</option>
+        <option value="120">2분</option>
+      </select>
+    </label>
+    <button onclick="startChallenge()">시작</button>
+    <p class="timer" id="countdown"></p>
+
+    <form id="answerForm">
+      <table>
+        <thead><tr><th>교시</th><th>과목</th><th>장소 (직접 입력)</th></tr></thead>
+        <tbody id="questionRows"></tbody>
+      </table>
+      <button type="button" onclick="checkAnswers()">정답 확인</button>
+    </form>
+  </div>
+
+  <script>
+    let timer;
+    const timetable = {
+      '월': ['체육', '도덕', '국어', '미술', '역사', '과학', '가정'],
+      '화': ['국어', '체육', '역사', '과학', '영어', '음악', '가정'],
+      '수': ['수학', '영어', '도덕', '사회', '자율', '동아리', ''],
+      '목': ['과학', '국어', '영어', '기술', '미술', '스포츠 클럽', '수학'],
+      '금': ['국어', '사회', '과학', '체육', '수학', '영어', '']
+    };
+
+    const highlighted = {
+      '월': [false, false, true, false, true, false, true],
+      '화': [true, false, false, false, true, false, false],
+      '수': [false, true, false, true, false, true, false],
+      '목': [false, false, true, false, false, false, true],
+      '금': [false, false, true, false, true, true, false]
+    };
+
+    const locations = {
+      '체육': '운동장',
+      '과학': '과학실',
+      '음악': '음악실',
+      '미술': '미술실',
+      '스포츠 클럽': '탁구장',
+      '기타': '교실'
+    };
+
+    function getLocation(subject, isHighlighted) {
+      return isHighlighted ? '특수학급' : (locations[subject] || locations['기타']);
+    }
+
+    function generateProblem() {
+      const day = document.getElementById("daySelect").value;
+      const subjects = timetable[day];
+      const marks = highlighted[day];
+      const tbody = document.getElementById("questionRows");
+      tbody.innerHTML = "";
+      subjects.forEach((subject, i) => {
+        if (subject !== '') {
+          const className = marks[i] ? 'highlight' : '';
+          tbody.innerHTML += `<tr><td>${i + 1}교시</td><td class="${className}">${subject}</td><td><input name="${i + 1}" /></td></tr>`;
+        }
+      });
+    }
+
+    function startChallenge() {
+      let seconds = parseInt(document.getElementById("timeSelect").value);
+      const countdown = document.getElementById("countdown");
+      countdown.textContent = `남은 시간: ${seconds}초`;
+
+      clearInterval(timer);
+      timer = setInterval(() => {
+        seconds--;
+        countdown.textContent = `남은 시간: ${seconds}초`;
+        if (seconds <= 0) {
+          clearInterval(timer);
+          if (confirm("시간이 종료되었습니다! 다시 도전하시겠어요?")) {
+            generateProblem();
+            startChallenge();
+          }
+        }
+      }, 1000);
+    }
+
+    function checkAnswers() {
+      const day = document.getElementById("daySelect").value;
+      const subjects = timetable[day];
+      const marks = highlighted[day];
+      const rows = document.querySelectorAll("#questionRows tr");
+      rows.forEach((row, i) => {
+        const subject = subjects[i];
+        const isHighlighted = marks[i];
+        const input = row.querySelector("input");
+        const correct = getLocation(subject, isHighlighted);
+        if (input.value.trim() === correct) {
+          input.className = "correct";
+        } else {
+          input.className = "incorrect";
+        }
+      });
+    }
+
+    window.onload = generateProblem;
+  </script>
+</body>
+</html>
