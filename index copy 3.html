@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>CT 기반 햄버거 주문 문제</title>
+  <style>
+    body { font-family: 'Arial'; padding: 20px; }
+    .tab-menu button {
+      background-color: #f1f1f1;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .tab-menu button.active {
+      background-color: #4285f4;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+      border-top: 2px solid #ccc;
+      padding-top: 20px;
+      margin-top: 10px;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    textarea { width: 100%; height: 80px; margin-top: 10px; }
+    .match-select { margin-left: 10px; }
+    .students { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+    button.action { margin-top: 15px; padding: 10px 15px; }
+    ul li { margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+
+  <h1>CT 기반 문제 해결: 햄버거를 찾아라</h1>
+
+  <div class="tab-menu">
+    <button class="tab-btn active" onclick="openTab(event, 'decomposition')">① 문제 분해</button>
+    <button class="tab-btn" onclick="openTab(event, 'abstraction')">② 추상화</button>
+    <button class="tab-btn" onclick="openTab(event, 'pattern')">③ 패턴 인식</button>
+    <button class="tab-btn" onclick="openTab(event, 'algorithm')">④ 알고리즘 적용</button>
+  </div>
+
+  <!-- 문제 분해 탭 -->
+  <div id="decomposition" class="tab-content active">
+    <h3>① 문제 분해: 각 학생이 원하는 조건을 직접 작성해보세요.</h3>
+    <p>학생들이 어떤 조건을 가지고 햄버거를 선택하려는지 생각해보고 직접 작성해보세요.</p>
+    <textarea placeholder="예: 학생1 - 치즈가 있는 버거, 학생2 - 양상추가 없는 버거..."></textarea>
+  </div>
+
+  <!-- 추상화 탭 -->
+  <div id="abstraction" class="tab-content">
+    <h3>② 추상화: 햄버거 재료를 핵심 요소로 구분해보세요.</h3>
+    <p>다음 햄버거 4종류의 재료를 아래 표에 맞게 핵심 요소별로 분류해보세요.</p>
+    <ul>
+      <li>1번: 패티 2, 치즈 2, 토마토 1</li>
+      <li>2번: 패티 3, 치즈 1, 토마토 1</li>
+      <li>3번: 패티 2, 토마토 2, 양상추 1</li>
+      <li>4번: 패티 2, 치즈 1, 토마토 1, 양상추 1</li>
+    </ul>
+    <textarea placeholder="예: 치즈가 있는 버거: 1, 2, 4 / 양상추 없는 버거: 1, 2..."></textarea>
+  </div>
+
+  <!-- 패턴 인식 탭 -->
+  <div id="pattern" class="tab-content">
+    <h3>③ 패턴 인식: 조건과 재료의 관계를 이해해보세요.</h3>
+    <p>Q. 패티가 가장 많은 버거는 몇 번인가요?</p>
+    <select id="pattyMax">
+      <option value="">선택</option>
+      <option value="1">1번</option>
+      <option value="2">2번</option>
+      <option value="3">3번</option>
+      <option value="4">4번</option>
+    </select>
+    <p>Q. 토마토가 가장 많이 들어간 버거는?</p>
+    <select id="tomatoMax">
+      <option value="">선택</option>
+      <option value="1">1번</option>
+      <option value="2">2번</option>
+      <option value="3">3번</option>
+      <option value="4">4번</option>
+    </select>
+    <button class="action" onclick="checkPattern()">채점하기</button>
+    <p id="patternResult"></p>
+  </div>
+
+  <!-- 알고리즘 탭 -->
+  <div id="algorithm" class="tab-content">
+    <h3>④ 알고리즘 적용: 햄버거를 학생들에게 정확히 배정해보세요.</h3>
+    <p><strong>공통 조건: 한 학생당 하나의 버거만 선택 가능하며, 중복 선택은 안 됩니다.</strong></p>
+    <div class="students">
+      <div>학생1 (치즈): 
+        <select class="match-select" id="s1">
+          <option value="">선택</option><option value="1">1번</option><option value="2">2번</option><option value="3">3번</option><option value="4">4번</option>
+        </select>
+      </div>
+      <div>학생2 (양상추 X): 
+        <select class="match-select" id="s2">
+          <option value="">선택</option><option value="1">1번</option><option value="2">2번</option><option value="3">3번</option><option value="4">4번</option>
+        </select>
+      </div>
+      <div>학생3 (패티 많이): 
+        <select class="match-select" id="s3">
+          <option value="">선택</option><option value="1">1번</option><option value="2">2번</option><option value="3">3번</option><option value="4">4번</option>
+        </select>
+      </div>
+      <div>학생4 (토마토 많이): 
+        <select class="match-select" id="s4">
+          <option value="">선택</option><option value="1">1번</option><option value="2">2번</option><option value="3">3번</option><option value="4">4번</option>
+        </select>
+      </div>
+    </div>
+    <button class="action" onclick="checkAnswer()">정답 확인</button>
+    <p id="finalResult"></p>
+  </div>
+
+  <script>
+    function openTab(evt, tabName) {
+      document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      document.getElementById(tabName).classList.add("active");
+      evt.currentTarget.classList.add("active");
+    }
+
+    function checkPattern() {
+      const patty = document.getElementById("pattyMax").value;
+      const tomato = document.getElementById("tomatoMax").value;
+      if (patty == "2" && tomato == "3") {
+        document.getElementById("patternResult").textContent = "✅ 정답입니다!";
+      } else {
+        document.getElementById("patternResult").textContent = "❌ 다시 확인해보세요.";
+      }
+    }
+
+    const burgers = {
+      1: { patty: 2, cheese: 2, tomato: 1, lettuce: 0 },
+      2: { patty: 3, cheese: 1, tomato: 1, lettuce: 0 },
+      3: { patty: 2, cheese: 0, tomato: 2, lettuce: 1 },
+      4: { patty: 2, cheese: 1, tomato: 1, lettuce: 1 }
+    };
+
+    function checkAnswer() {
+      const s1 = parseInt(document.getElementById("s1").value);
+      const s2 = parseInt(document.getElementById("s2").value);
+      const s3 = parseInt(document.getElementById("s3").value);
+      const s4 = parseInt(document.getElementById("s4").value);
+      const selections = [s1, s2, s3, s4];
+
+      if (new Set(selections).size < 4) {
+        document.getElementById("finalResult").textContent = "❌ 중복된 선택이 있습니다.";
+        return;
+      }
+
+      const b1 = burgers[s1];
+      const b2 = burgers[s2];
+      const b3 = burgers[s3];
+      const b4 = burgers[s4];
+
+      const maxPatty = Math.max(...Object.values(burgers).map(b => b.patty));
+      const maxTomato = Math.max(...Object.values(burgers).map(b => b.tomato));
+
+      const valid =
+        b1.cheese >= 1 &&
+        b2.lettuce === 0 &&
+        b3.patty === maxPatty &&
+        b4.tomato === maxTomato;
+
+      document.getElementById("finalResult").textContent = valid ? "🎉 정답입니다!" : "❌ 조건을 만족하지 않습니다.";
+    }
+  </script>
+
+</body>
+</html>
