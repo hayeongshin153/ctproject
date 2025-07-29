@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>오늘은 어디로 가야할까? CT 기반 문제 해결</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    h1, h2, h3 { color: darkblue; }
+    .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+    .tab { padding: 10px 20px; border: 1px solid #ccc; background: #eee; cursor: pointer; }
+    .tab.active { background: #fff; border-bottom: none; font-weight: bold; }
+    .tab-content { display: none; border: 1px solid #ccc; padding: 20px; background: #fff; }
+    .tab-content.active { display: block; }
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; table-layout: fixed; }
+    th, td { border: 1px solid #333; padding: 8px; text-align: center; word-wrap: break-word; }
+    .highlight { background-color: #cfe2f3; }
+  </style>
+</head>
+<body>
+  <h1>오늘은 어디로 가야할까?</h1>
+  <h2>컴퓨팅 사고 기반 문제 해결 활동</h2>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('decomposition')">1. 문제 분해</div>
+    <div class="tab" onclick="showTab('abstraction')">2. 추상화</div>
+    <div class="tab" onclick="showTab('pattern')">3. 패턴 인식</div>
+    <div class="tab" onclick="showTab('solution')">4. 문제 해결</div>
+  </div>
+
+  <div id="decomposition" class="tab-content active">
+    <h3>📌 문제 분해</h3>
+    <p>아래의 입력 항목을 보고 문제를 구성해보세요.</p>
+    <ul>
+      <li>요일 선택</li>
+      <li>교시 선택</li>
+      <li>과목명 입력</li>
+      <li>특수학급 수업 여부 (색칠 여부)</li>
+    </ul>
+    <label>요일:
+      <select>
+        <option>월</option><option>화</option><option>수</option><option>목</option><option>금</option>
+      </select>
+    </label>
+    <br><br>
+    <label>교시:
+      <select>
+        <option>1교시</option><option>2교시</option><option>3교시</option>
+        <option>4교시</option><option>5교시</option><option>6교시</option><option>7교시</option>
+      </select>
+    </label>
+    <br><br>
+    <label>과목명 입력: <input type="text" /></label><br><br>
+    <label>특수학급 수업인가요? 
+      <select>
+        <option>예</option><option>아니오</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="abstraction" class="tab-content">
+    <h3>🔍 추상화</h3>
+    <p>다음 중 핵심 요소만 추려서 남겨보세요 (불필요한 정보는 제외).</p>
+    <ul>
+      <li>색칠 여부 → 특수학급 여부</li>
+      <li>과목명</li>
+    </ul>
+    <p>아래 보기 중 핵심 정보만 선택하세요:</p>
+    <label><input type="checkbox"> 요일</label><br>
+    <label><input type="checkbox" checked> 과목명</label><br>
+    <label><input type="checkbox" checked> 특수학급 여부</label><br>
+    <label><input type="checkbox"> 수업시간 (시각)</label><br>
+  </div>
+
+  <div id="pattern" class="tab-content">
+    <h3>📈 패턴(규칙) 찾기</h3>
+    <p>다음 규칙을 스스로 찾아 적어보세요.</p>
+    <ul>
+      <li>색칠된 수업은 어디서 진행되나요?</li>
+      <li>체육은 어디서 진행되나요?</li>
+      <li>음악은?</li>
+      <li>기타 과목은 어디에서?</li>
+    </ul>
+    <p><strong>예시 규칙</strong>: 체육 → 운동장, 과학 → 과학실 등</p>
+    <p>📝 내 규칙 작성:</p>
+    <textarea rows="5" style="width:100%"></textarea>
+  </div>
+
+  <div id="solution" class="tab-content">
+    <h3>✅ 문제 해결</h3>
+    <p>아래 시간표 중 오늘 요일을 선택하여 수업 장소를 예측해보세요.</p>
+    <table>
+      <tr><th>교시</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th></tr>
+      <tr><td>1교시</td><td>체육</td><td class="highlight">국어</td><td>수학</td><td class="highlight">과학</td><td>국어</td></tr>
+      <tr><td>2교시</td><td>도덕</td><td>체육</td><td class="highlight">영어</td><td>국어</td><td>사회</td></tr>
+      <tr><td>3교시</td><td class="highlight">국어</td><td>역사</td><td>도덕</td><td class="highlight">영어</td><td class="highlight">과학</td></tr>
+      <tr><td>4교시</td><td>미술</td><td>과학</td><td class="highlight">사회</td><td>기술</td><td>체육</td></tr>
+      <tr><td>5교시</td><td class="highlight">역사</td><td class="highlight">영어</td><td>자율</td><td>미술</td><td class="highlight">수학</td></tr>
+      <tr><td>6교시</td><td>과학</td><td>음악</td><td class="highlight">동아리</td><td>스포츠 클럽</td><td class="highlight">영어</td></tr>
+      <tr><td>7교시</td><td class="highlight">가정</td><td>가정</td><td></td><td class="highlight">수학</td><td></td></tr>
+    </table>
+    <br>
+    <p>각 교시별 수업 장소를 직접 예측해 입력해보세요.</p>
+    <table>
+      <tr><th>교시</th><th>과목</th><th>예상 장소 입력</th></tr>
+      <tr><td>1교시</td><td>과학</td><td><input></td></tr>
+      <tr><td>2교시</td><td>국어</td><td><input></td></tr>
+      <tr><td>3교시</td><td>영어</td><td><input></td></tr>
+      <tr><td>4교시</td><td>기술</td><td><input></td></tr>
+      <tr><td>5교시</td><td>미술</td><td><input></td></tr>
+    </table>
+  </div>
+
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>
