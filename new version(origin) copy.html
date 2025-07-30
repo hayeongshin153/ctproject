@@ -4,8 +4,21 @@
   <meta charset="UTF-8">
   <title>누구에게 문서를 전달해야할까?</title>
   <style>
-    body { background: #f6f7fb; font-family: '맑은 고딕', sans-serif; margin:0; }
-    .container { max-width: 540px; background: #fff; margin: 40px auto; border-radius: 18px; box-shadow: 0 6px 24px #dde2ed88; padding: 0 0 32px 0;}
+    body { 
+      background: #f6f7fb; 
+      font-family: '맑은 고딕', sans-serif; 
+      margin:0; 
+      padding: 0;
+    }
+    .container { 
+      max-width: 98vw;
+      width: 98vw;
+      background: #fff;
+      margin: 20px auto; 
+      border-radius: 18px; 
+      box-shadow: 0 6px 24px #dde2ed88; 
+      padding: 0 0 32px 0;
+    }
     .mainimg { width: 100%; border-radius: 18px 18px 0 0; }
     .tabs { display: flex; margin: 18px 0 0 0; }
     .tab { flex:1; text-align:center; cursor:pointer; padding: 13px 0; font-weight: bold; border-bottom: 2.5px solid #e0e0e0; background: #f6f8fa;}
@@ -81,6 +94,8 @@
 </head>
 <body>
   <div class="container">
+    <!-- 이미지 태그(필요시 base64로 삽입) -->
+    <img src="image.png" class="mainimg" alt="문제 이미지">
     <div class="title">타이틀: 누구에게 문서를 전달해야할까?</div>
     <div class="subtitle">대상 및 교과: 중학교 (특수)</div>
     <div class="timer">
@@ -280,7 +295,7 @@
     let processMsg = "<b>알고리즘 처리 과정:</b><br>";
     let current = [...teachers];
     processMsg += "초기 후보: " + current.map(t=>`<b>${t.no}번</b>`).join(', ') + "<br>";
-        // (이어서) 알고리즘 탭
+    // (이어서) 알고리즘 탭
     current = current.filter(t => t.바지);
     processMsg += "① 바지를 입고 있는 후보: " + (current.length?current.map(t=>`<b>${t.no}번</b>`).join(', ') : '없음') + "<br>";
     current = current.filter(t => !t.책);
@@ -338,4 +353,3 @@
 </script>
 </body>
 </html>
-
