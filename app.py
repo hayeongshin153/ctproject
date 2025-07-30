@@ -4,6 +4,8 @@ import streamlit.components.v1 as components
 st.set_page_config(layout='wide', page_title='컴퓨팅사고력 문제 by SHY')
 st.title('This is SHY Webapp!!')
 
+st.image('이미지.png', caption='문제 이미지', use_column_width=True)
+
 col1, col2 = st.columns((4, 1))
 
 with col1:
