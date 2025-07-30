@@ -4,12 +4,13 @@ import streamlit.components.v1 as components
 st.set_page_config(layout='wide', page_title='컴퓨팅사고력 문제 by SHY')
 st.title('This is SHY Webapp!!')
 
-st.image('image.png', caption='문제 이미지', use_column_width=True)
+
 
 col1, col2 = st.columns((4, 1))
 
 with col1:
     with st.expander('누구에게 문서를 전해줘야할까?'):
+        st.image("image.png", caption="문제 이미지", use_container_width=True)
         with open('./new version(origin) copy.html', 'r', encoding='utf-8') as f:
             html = f.read()
         components.html(html, height=800, scrolling=True)
