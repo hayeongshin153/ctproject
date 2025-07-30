@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>누구에게 문서를 전달해야할까?</title>
+  <style>
+    body { background: #f6f7fb; font-family: '맑은 고딕', sans-serif; margin:0; }
+    .container { max-width: 540px; background: #fff; margin: 40px auto; border-radius: 18px; box-shadow: 0 6px 24px #dde2ed88; padding: 0 0 32px 0;}
+    .mainimg { width: 100%; border-radius: 18px 18px 0 0; }
+    .tabs { display: flex; margin: 18px 0 0 0; }
+    .tab { flex:1; text-align:center; cursor:pointer; padding: 13px 0; font-weight: bold; border-bottom: 2.5px solid #e0e0e0; background: #f6f8fa;}
+    .tab.active { color: #1f5fd1; border-bottom: 3px solid #1f5fd1; background: #f8fbff;}
+    .box { margin:24px 24px 0 24px; padding:22px; background:#f8fafc; border-radius:14px; min-height:170px;}
+    .title { margin: 32px 0 0 0; text-align:center; font-size:1.5em; font-weight: bold; color:#0a297a; }
+    .subtitle { text-align:center; color:#325e97; font-weight: 500; margin-bottom:18px;}
+    .timer { margin: 14px 0; text-align:center;}
+    .timer label { font-weight:bold; margin: 0 9px 0 0; }
+    .timer button { margin: 0 4px; padding:7px 20px; font-size:1em; border-radius:8px; border:1.5px solid #d2d5dd; background: #f6f7fc; cursor:pointer; font-weight:bold;}
+    .timer button.selected { background: #295ce2; color:#fff; border-color: #2149ad;}
+    .timer span { display:inline-block; margin-left:14px; color:#21732a; font-weight:bold; font-size:1.2em;}
+    .radio-wrap {margin-top:18px;}
+    .radio-wrap label {margin-right: 20px;}
+    .success {color: #2c781a; font-weight:bold;}
+    .fail {color: #bb2124; font-weight:bold;}
+    .hint {color: #235a99; font-size:.93em;}
+    .remain { font-weight: bold; color: #21732a; margin-top: 8px;}
+    .situationbox {
+      background: #f1f5fa;
+      border-radius: 15px;
+      padding: 22px 20px 14px 20px;
+      margin: 26px 28px 0 28px;
+      box-shadow: 0 1px 8px #bdd1ee36;
+      border-left: 6px solid #356dc6;
+      font-size: 1.04em;
+      color: #18365a;
+      line-height: 1.7;
+    }
+    .situationbox b {
+      color: #1d3f8e;
+    }
+    .featurebox {
+      background: #eaf4fd;
+      border-radius: 15px;
+      padding: 18px 18px 14px 18px;
+      margin: 12px 28px 0 28px;
+      box-shadow: 0 1px 6px #bdd1ee36;
+      border-left: 6px solid #4bb0f9;
+      font-size: 1.04em;
+      color: #174a6c;
+      line-height: 1.7;
+    }
+    .featurebox b {
+      color: #1a77b7;
+    }
+    .featurebox ul {margin: 7px 0 0 0; padding-left: 17px;}
+    .featurebox li {margin-bottom: 2px;}
+    .cond-table { width:100%; border-collapse: collapse; margin:18px 0;}
+    .cond-table th, .cond-table td { border:1px solid #d3e2ee; text-align:center;}
+    .cond-table th { background:#eaf0fb; font-weight:bold; }
+    .cond-table .cond-label { background:#fafdff; font-weight:500;}
+    .cond-table input[type="checkbox"] { width:19px; height:19px; vertical-align:middle; margin:4px 0 0 0; cursor:pointer;}
+    .cond-table thead tr:nth-child(1) th {
+      border-bottom:none;
+      background: #fafdff;
+      font-size:1em;
+      font-weight:600;
+    }
+    .cond-table thead tr:nth-child(2) th {
+      border-top:none;
+      background: #fafdff;
+      font-size:1.09em;
+      font-weight:600;
+      padding-bottom: 7px;
+    }
+    .cond-table tbody td { height:34px; }
+    .btn {margin: 10px 8px 0 0; padding:8px 28px; border-radius:10px; border:none; font-size:1em; background:#3367e6; color:#fff; font-weight:bold; cursor:pointer;}
+    .btn.reset {background:#adb8c4;}
+    .pattern-step-list {margin: 10px 0 6px 0; padding:0;}
+    .pattern-step-list div {margin-bottom:3px;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="이미지.png" class="mainimg" alt="문제 이미지">
+    <div class="title">타이틀: 누구에게 문서를 전달해야할까?</div>
+    <div class="subtitle">대상 및 교과: 중학교 (특수)</div>
+    <div class="timer">
+      <label>문제 풀이 시간:</label>
+      <button id="timer-btn-30">30초</button>
+      <button id="timer-btn-60">1분</button>
+      <button id="timer-btn-90">1분 30초</button>
+      <button id="timer-btn-120">2분</button>
+      <span id="timer_display">0:00</span>
+    </div>
+    <div class="situationbox">
+      <b>문제 상황</b><br>
+      철수는 담임 선생님으로부터 다음과 같은 특별한 부탁을 받았습니다.<br>
+      “지금 저기 복도에 있는 4명의 선생님 중에 홍길동 선생님에게 이 문서를 전달해줘.”<br>
+      철수는 선생님들의 외형을 잘 관찰하여 특징에 맞는 올바른 선생님에게 문서를 전달해야 합니다.
+    </div>
+    <div class="featurebox">
+      <b>홍길동 선생님 특징</b>
+      <ul>
+        <li>바지를 입고 있다.</li>
+        <li>책을 들고 있지 않다.</li>
+        <li>안경을 쓰고 있다.</li>
+      </ul>
+    </div>
+    <div class="tabs">
+      <div class="tab active" id="tab-btn-0">문제분해</div>
+      <div class="tab" id="tab-btn-1">추상화</div>
+      <div class="tab" id="tab-btn-2">패턴(규칙) 찾기</div>
+      <div class="tab" id="tab-btn-3">알고리즘</div>
+    </div>
+    <!-- 문제분해 탭 -->
+    <div id="tabbox0" class="box">
+      <div style="font-weight:bold;">문제분해: 조건별 표로 선생님 후보를 추려보세요.</div>
+      <div class="hint">각 칸을 학생이 직접 O(일치)로 체크하세요.<br>O표시만 모두 된 열이 남은 후보로 인정됩니다.</div>
+      <table class="cond-table">
+        <thead>
+          <tr>
+            <th rowspan="2" style="width:125px;">조건</th>
+            <th colspan="4">번호</th>
+          </tr>
+          <tr>
+            <th>①</th>
+            <th>②</th>
+            <th>③</th>
+            <th>④</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="cond-label">바지를 입고 있는가?</td>
+            <td><input type="checkbox" id="chk_1_0"></td>
+            <td><input type="checkbox" id="chk_2_0"></td>
+            <td><input type="checkbox" id="chk_3_0"></td>
+            <td><input type="checkbox" id="chk_4_0"></td>
+          </tr>
+          <tr>
+            <td class="cond-label">책을 들고 있지 않는가?</td>
+            <td><input type="checkbox" id="chk_1_1"></td>
+            <td><input type="checkbox" id="chk_2_1"></td>
+            <td><input type="checkbox" id="chk_3_1"></td>
+            <td><input type="checkbox" id="chk_4_1"></td>
+          </tr>
+          <tr>
+            <td class="cond-label">안경을 쓰고 있는가?</td>
+            <td><input type="checkbox" id="chk_1_2"></td>
+            <td><input type="checkbox" id="chk_2_2"></td>
+            <td><input type="checkbox" id="chk_3_2"></td>
+            <td><input type="checkbox" id="chk_4_2"></td>
+          </tr>
+          <tr>
+            <td colspan="5" style="background:#fafdff;">
+              <span style="color:#555;font-size:0.97em;">정답 기준: 각 열마다 O만 모두 체크된 경우에만 해당 선생님이 남은 후보입니다.</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- 정답 확인 버튼/피드백 없음 -->
+    </div>
+    <!-- 추상화 탭 -->
+    <div id="tabbox1" class="box" style="display:none">
+      <b>추상화 단계: 주요 특징 선택</b>
+      <div style="margin:18px 0;">
+        <label><input type="checkbox" id="abs1"> 바지를 입고 있다</label><br>
+        <label><input type="checkbox" id="abs2"> 책을 들고 있지 않다</label><br>
+        <label><input type="checkbox" id="abs3"> 안경을 쓰고 있다</label><br>
+        <label><input type="checkbox" id="abs4"> 호루라기를 매고 있다</label><br>
+        <label><input type="checkbox" id="abs5"> 넥타이를 매고 있다</label><br>
+        <label><input type="checkbox" id="abs6"> 머리를 묶고 있다</label><br>
+      </div>
+      <button id="abstraction-btn" class="btn">정답 확인</button>
+      <span id="abstraction-feedback" style="margin-left:16px; font-weight:bold;"></span>
+    </div>
+    <!-- 패턴(규칙) 찾기 탭 -->
+    <div id="tabbox2" class="box" style="display:none">
+      <b>패턴(규칙) 찾기 단계 (예시)</b>
+      <div style="margin:16px 0 0 0;">조건을 순서대로 적용하며 남은 후보를 확인해 보세요.<br>
+      <span class="hint">아래 '다음 조건 적용'을 누르면 필터링이 진행됩니다.</span></div>
+      <div id="pattern-steps" class="pattern-step-list"></div>
+      <div id="pattern-candidates" style="margin:14px 0;font-weight:bold;">남은 후보: ①, ②, ③, ④</div>
+      <button id="pattern-next" class="btn">다음 조건 적용</button>
+      <button id="pattern-reset" class="btn reset">초기화</button>
+    </div>
+    <!-- 알고리즘 탭 (과정 시각화 추가) -->
+    <div id="tabbox3" class="box" style="display:none">
+      <b>알고리즘 단계 (예시)</b>
+      <div style="margin:16px 0 10px 0;">정답을 찾아 문서를 전달할 선생님을 선택하세요.</div>
+      <div class="radio-wrap">
+        <label><input type="radio" name="answer" value="1"> 1번</label>
+        <label><input type="radio" name="answer" value="2"> 2번</label>
+        <label><input type="radio" name="answer" value="3"> 3번</label>
+        <label><input type="radio" name="answer" value="4"> 4번</label>
+      </div>
+      <button id="algorithm-btn" class="btn">정답 확인</button>
+      <div id="algorithm-process" style="margin:16px 0 0 0; font-size:0.98em; color:#224;"></div>
+      <span id="algorithm-feedback" style="margin-left:8px; font-weight:bold;"></span>
+    </div>
+  </div>
+<script>
+  // 탭 함수
+  function showTab(idx) {
+    for(let i=0; i<4; i++) {
+      document.querySelectorAll('.tab')[i].classList.remove('active');
+      document.getElementById('tabbox'+i).style.display = (i===idx)?"block":"none";
+    }
+    document.querySelectorAll('.tab')[idx].classList.add('active');
+    if(idx===2) showPatternStatus();
+  }
+  // 타이머
+  let timer = null, timerValue = 0, timerRemain = 0;
+  function setTimer(sec, btn) {
+    timerValue = sec;
+    timerRemain = sec;
+    updateTimer();
+    document.querySelectorAll('.timer button').forEach(b=>b.classList.remove('selected'));
+    if(btn) btn.classList.add('selected');
+    if(timer) clearInterval(timer);
+    timer = setInterval(function(){
+      timerRemain--;
+      updateTimer();
+      if(timerRemain<=0) {
+        clearInterval(timer);
+        alert("⏰ 시간이 종료되었습니다!\n다시 도전하려면 시간을 선택하세요.");
+        document.querySelectorAll('.timer button').forEach(b=>b.classList.remove('selected'));
+      }
+    },1000);
+  }
+  function updateTimer() {
+    document.getElementById('timer_display').innerText = 
+      `${Math.floor(timerRemain/60)}:${String(timerRemain%60).padStart(2,'0')}`;
+  }
+  updateTimer();
+
+  // 추상화 탭
+  function checkAbstractionAnswer() {
+    const right = [1,2,3].map(n => document.getElementById('abs'+n).checked).every(v => v);
+    const wrong = [4,5,6].some(n => document.getElementById('abs'+n).checked);
+    let feedback = '';
+    if (right && !wrong) {
+      feedback = '<span class="success">정답입니다!</span>';
+    } else {
+      feedback = '<span class="fail">정답이 아닙니다.</span>';
+    }
+    document.getElementById('abstraction-feedback').innerHTML = feedback;
+  }
+  // 패턴(규칙) 찾기
+  const teachers = [
+    { no: 1, 바지: false, 책: false, 안경: true },
+    { no: 2, 바지: true, 책: true, 안경: true },
+    { no: 3, 바지: true, 책: false, 안경: true },
+    { no: 4, 바지: true, 책: false, 안경: false }
+  ];
+  const patternSteps = [
+    { label: "바지를 입고 있다", key: "바지", value: true },
+    { label: "책을 들고 있지 않다", key: "책", value: false },
+    { label: "안경을 쓰고 있다", key: "안경", value: true }
+  ];
+  let patternIdx = 0;
+  let candidates = [1,2,3,4];
+  function showPatternStatus() {
+    let txt = '남은 후보: ';
+    txt += candidates.length ? candidates.map(n => `①②③④`[n-1]).join(', ') : '없음';
+    document.getElementById('pattern-candidates').innerHTML = txt;
+    let stepInfo = '';
+    for (let i = 0; i < patternSteps.length; i++) {
+      stepInfo += `<div>${i+1}. ${patternSteps[i].label} ${i < patternIdx ? "✔️" : ""}</div>`;
+    }
+    document.getElementById('pattern-steps').innerHTML = stepInfo;
+  }
+  // 알고리즘 탭
+  function checkAlgorithmAnswer() {
+    const teachers = [
+      { no: 1, 바지: false, 책: false, 안경: true },
+      { no: 2, 바지: true, 책: true, 안경: true },
+      { no: 3, 바지: true, 책: false, 안경: true },
+      { no: 4, 바지: true, 책: false, 안경: false }
+    ];
+    let processMsg = "<b>알고리즘 처리 과정:</b><br>";
+    let current = [...teachers];
+    processMsg += "초기 후보: " + current.map(t=>`<b>${t.no}번</b>`).join(', ') + "<br>";
+        // (이어서) 알고리즘 탭
+    current = current.filter(t => t.바지);
+    processMsg += "① 바지를 입고 있는 후보: " + (current.length?current.map(t=>`<b>${t.no}번</b>`).join(', ') : '없음') + "<br>";
+    current = current.filter(t => !t.책);
+    processMsg += "② 책을 들고 있지 않은 후보: " + (current.length?current.map(t=>`<b>${t.no}번</b>`).join(', ') : '없음') + "<br>";
+    current = current.filter(t => t.안경);
+    processMsg += "③ 안경을 쓰고 있는 후보: " + (current.length?current.map(t=>`<b>${t.no}번</b>`).join(', ') : '없음') + "<br>";
+    let rightNo = current.length ? current[0].no : null;
+    processMsg += "<b>최종 남은 후보: " + (current.length?`${current[0].no}번`:"없음") + "</b>";
+    document.getElementById('algorithm-process').innerHTML = processMsg;
+    const radios = document.getElementsByName('answer');
+    let userPick = null;
+    for(let r of radios) if(r.checked) userPick = parseInt(r.value);
+    let feedback = '';
+    if(!userPick) {
+      feedback = '<span class="fail">번호를 선택하세요.</span>';
+    } else if(userPick === rightNo) {
+      feedback = '<span class="success">정답입니다!</span>';
+    } else {
+      feedback = '<span class="fail">정답이 아닙니다.</span>';
+    }
+    document.getElementById('algorithm-feedback').innerHTML = feedback;
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // 탭 이벤트 연결
+    for(let i=0;i<4;i++) {
+      document.getElementById('tab-btn-'+i).addEventListener('click', function(){ showTab(i); });
+    }
+    // 타이머 버튼
+    document.getElementById('timer-btn-30').onclick = function(){setTimer(30, this);};
+    document.getElementById('timer-btn-60').onclick = function(){setTimer(60, this);};
+    document.getElementById('timer-btn-90').onclick = function(){setTimer(90, this);};
+    document.getElementById('timer-btn-120').onclick = function(){setTimer(120, this);};
+    // 추상화 버튼
+    document.getElementById('abstraction-btn').onclick = checkAbstractionAnswer;
+    // 알고리즘 버튼
+    document.getElementById('algorithm-btn').onclick = checkAlgorithmAnswer;
+    // 패턴탭 버튼
+    document.getElementById('pattern-next').onclick = function() {
+      if (patternIdx >= patternSteps.length) return;
+      const step = patternSteps[patternIdx];
+      candidates = candidates.filter(n =>
+        teachers.find(t=>t.no===n)[step.key] === step.value
+      );
+      patternIdx++;
+      showPatternStatus();
+    };
+    document.getElementById('pattern-reset').onclick = function() {
+      patternIdx = 0;
+      candidates = [1,2,3,4];
+      showPatternStatus();
+    };
+    showPatternStatus();
+  });
+</script>
+</body>
+</html>
+

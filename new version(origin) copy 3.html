@@ -1,122 +1,239 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>오늘은 어디로 가야할까? CT 기반 문제 해결</title>
+  <meta charset="UTF-8" />
+  <title>컴퓨팅 사고 기반 문제 해결 활동</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 30px; }
-    h1, h2, h3 { color: darkblue; }
-    .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-    .tab { padding: 10px 20px; border: 1px solid #ccc; background: #eee; cursor: pointer; }
-    .tab.active { background: #fff; border-bottom: none; font-weight: bold; }
-    .tab-content { display: none; border: 1px solid #ccc; padding: 20px; background: #fff; }
+    body { font-family: "맑은 고딕", sans-serif; margin: 20px; }
+    h1 { color: #1a237e; }
+    h2 { color: #d32f2f; }
+    .tabs { display: flex; margin-top: 20px; }
+    .tab-button {
+      padding: 10px 20px; margin-right: 5px;
+      border: 1px solid #ccc; background: #f5f5f5; cursor: pointer;
+    }
+    .tab-button.active {
+      background: white; border-bottom: none; font-weight: bold;
+    }
+    .tab-content { display: none; border: 1px solid #ccc; padding: 20px; }
     .tab-content.active { display: block; }
-    table { border-collapse: collapse; width: 100%; margin-top: 10px; table-layout: fixed; }
-    th, td { border: 1px solid #333; padding: 8px; text-align: center; word-wrap: break-word; }
-    .highlight { background-color: #cfe2f3; }
+
+    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+    th, td { border: 1px solid #999; padding: 8px; text-align: center; }
+    th { background: #eee; }
+    .highlight { background: #e0efff; }
+
+    .form-table { width: 60%; margin-top: 10px; }
+    .form-table td { padding: 6px; }
+    .form-table td.label { width: 100px; font-weight: bold; }
+
+    input, select { width: 90%; padding: 4px; margin-top: 4px; }
+    button { margin-top: 10px; padding: 6px 12px; }
+    .correct { color: green; }
+    .incorrect { color: red; }
   </style>
 </head>
 <body>
   <h1>오늘은 어디로 가야할까?</h1>
   <h2>컴퓨팅 사고 기반 문제 해결 활동</h2>
 
-  <div class="tabs">
-    <div class="tab active" onclick="showTab('decomposition')">1. 문제 분해</div>
-    <div class="tab" onclick="showTab('abstraction')">2. 추상화</div>
-    <div class="tab" onclick="showTab('pattern')">3. 패턴 인식</div>
-    <div class="tab" onclick="showTab('solution')">4. 문제 해결</div>
-  </div>
-
-  <div id="decomposition" class="tab-content active">
-    <h3>📌 문제 분해</h3>
-    <p>아래의 입력 항목을 보고 문제를 구성해보세요.</p>
-    <ul>
-      <li>요일 선택</li>
-      <li>교시 선택</li>
-      <li>과목명 입력</li>
-      <li>특수학급 수업 여부 (색칠 여부)</li>
-    </ul>
-    <label>요일:
-      <select>
-        <option>월</option><option>화</option><option>수</option><option>목</option><option>금</option>
-      </select>
-    </label>
-    <br><br>
-    <label>교시:
-      <select>
-        <option>1교시</option><option>2교시</option><option>3교시</option>
-        <option>4교시</option><option>5교시</option><option>6교시</option><option>7교시</option>
-      </select>
-    </label>
-    <br><br>
-    <label>과목명 입력: <input type="text" /></label><br><br>
-    <label>특수학급 수업인가요? 
-      <select>
-        <option>예</option><option>아니오</option>
-      </select>
-    </label>
-  </div>
-
-  <div id="abstraction" class="tab-content">
-    <h3>🔍 추상화</h3>
-    <p>다음 중 핵심 요소만 추려서 남겨보세요 (불필요한 정보는 제외).</p>
-    <ul>
-      <li>색칠 여부 → 특수학급 여부</li>
-      <li>과목명</li>
-    </ul>
-    <p>아래 보기 중 핵심 정보만 선택하세요:</p>
-    <label><input type="checkbox"> 요일</label><br>
-    <label><input type="checkbox" checked> 과목명</label><br>
-    <label><input type="checkbox" checked> 특수학급 여부</label><br>
-    <label><input type="checkbox"> 수업시간 (시각)</label><br>
-  </div>
-
-  <div id="pattern" class="tab-content">
-    <h3>📈 패턴(규칙) 찾기</h3>
-    <p>다음 규칙을 스스로 찾아 적어보세요.</p>
-    <ul>
-      <li>색칠된 수업은 어디서 진행되나요?</li>
-      <li>체육은 어디서 진행되나요?</li>
-      <li>음악은?</li>
-      <li>기타 과목은 어디에서?</li>
-    </ul>
-    <p><strong>예시 규칙</strong>: 체육 → 운동장, 과학 → 과학실 등</p>
-    <p>📝 내 규칙 작성:</p>
-    <textarea rows="5" style="width:100%"></textarea>
-  </div>
-
-  <div id="solution" class="tab-content">
-    <h3>✅ 문제 해결</h3>
-    <p>아래 시간표 중 오늘 요일을 선택하여 수업 장소를 예측해보세요.</p>
-    <table>
+  <!-- 전체 시간표 (항상 상단) -->
+  <h3>📌 길동이의 전체 시간표</h3>
+  <table>
+    <thead>
       <tr><th>교시</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th></tr>
-      <tr><td>1교시</td><td>체육</td><td class="highlight">국어</td><td>수학</td><td class="highlight">과학</td><td>국어</td></tr>
-      <tr><td>2교시</td><td>도덕</td><td>체육</td><td class="highlight">영어</td><td>국어</td><td>사회</td></tr>
+    </thead>
+    <tbody>
+      <tr><td>1교시</td><td>체육</td><td class="highlight">국어</td><td class="highlight">수학</td><td class="highlight">과학</td><td class="highlight">국어</td></tr>
+      <tr><td>2교시</td><td>도덕</td><td class="highlight">체육</td><td class="highlight">영어</td><td class="highlight">국어</td><td class="highlight">사회</td></tr>
       <tr><td>3교시</td><td class="highlight">국어</td><td>역사</td><td>도덕</td><td class="highlight">영어</td><td class="highlight">과학</td></tr>
-      <tr><td>4교시</td><td>미술</td><td>과학</td><td class="highlight">사회</td><td>기술</td><td>체육</td></tr>
-      <tr><td>5교시</td><td class="highlight">역사</td><td class="highlight">영어</td><td>자율</td><td>미술</td><td class="highlight">수학</td></tr>
-      <tr><td>6교시</td><td>과학</td><td>음악</td><td class="highlight">동아리</td><td>스포츠 클럽</td><td class="highlight">영어</td></tr>
-      <tr><td>7교시</td><td class="highlight">가정</td><td>가정</td><td></td><td class="highlight">수학</td><td></td></tr>
-    </table>
-    <br>
-    <p>각 교시별 수업 장소를 직접 예측해 입력해보세요.</p>
-    <table>
-      <tr><th>교시</th><th>과목</th><th>예상 장소 입력</th></tr>
-      <tr><td>1교시</td><td>과학</td><td><input></td></tr>
-      <tr><td>2교시</td><td>국어</td><td><input></td></tr>
-      <tr><td>3교시</td><td>영어</td><td><input></td></tr>
-      <tr><td>4교시</td><td>기술</td><td><input></td></tr>
-      <tr><td>5교시</td><td>미술</td><td><input></td></tr>
-    </table>
+      <tr><td>4교시</td><td>미술</td><td class="highlight">과학</td><td class="highlight">사회</td><td class="highlight">기술</td><td class="highlight">체육</td></tr>
+      <tr><td>5교시</td><td>역사</td><td class="highlight">영어</td><td>자율</td><td class="highlight">미술</td><td class="highlight">수학</td></tr>
+      <tr><td>6교시</td><td class="highlight">과학</td><td>음악</td><td>동아리</td><td class="highlight">스포츠 클럽</td><td class="highlight">영어</td></tr>
+      <tr><td>7교시</td><td class="highlight">가정</td><td>가정</td><td class="highlight">수학</td><td></td><td></td></tr>
+    </tbody>
+  </table>
+
+  <!-- 탭 버튼 -->
+  <div class="tabs">
+    <div class="tab-button active" onclick="showTab(0)">1. 문제 분해</div>
+    <div class="tab-button" onclick="showTab(1)">2. 패턴 인식</div>
+    <div class="tab-button" onclick="showTab(2)">3. 문제 해결</div>
   </div>
 
-  <script>
-    function showTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      event.target.classList.add('active');
+  <!-- 1. 문제 분해 -->
+  <div class="tab-content active">
+    <h3>📌 문제 분해</h3>
+    <label>요일 선택:
+      <select id="daySelect" onchange="renderDecomposition()">
+        <option>월</option><option>화</option><option>수</option>
+        <option>목</option><option>금</option>
+      </select>
+    </label>
+    <div id="decompTable"></div>
+    <button onclick="checkDecomposition()">정답 확인</button>
+    <div id="decompResult" style="margin-top:10px;"></div>
+  </div>
+
+  <!-- 2. 패턴 인식 -->
+  <div class="tab-content">
+    <h3>📌 패턴 인식</h3>
+    <p>시간표에서 반복되는 규칙을 찾아 아래 보기 중 하나를 고르세요.</p>
+    <select id="patternSelect">
+      <option value="">--선택--</option>
+      <option value="p1">모든 색칠된 과목은 특수학급 교실</option>
+      <option value="p2">모든 일반 과목은 과목별 교실</option>
+      <option value="p3">가정 수업은 매주 7교시</option>
+    </select>
+    <button onclick="checkPattern()">제출</button>
+    <div id="patternResult" style="margin-top:10px;"></div>
+  </div>
+
+  <!-- 3. 문제 해결 -->
+  <div class="tab-content">
+    <h3>📌 문제 해결</h3>
+    <p>요일·교시·과목명·특수학급 여부를 선택하고, 갈 장소를 예측해 보세요.</p>
+    <table class="form-table">
+      <tr>
+        <td class="label">요일</td>
+        <td>
+          <select id="solDay" onchange="updatePeriodOptions()">
+            <option>월</option><option>화</option><option>수</option>
+            <option>목</option><option>금</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td class="label">교시</td>
+        <td><select id="solPeriod"></select></td>
+      </tr>
+      <tr>
+        <td class="label">과목명</td>
+        <td><input type="text" id="solSubject" placeholder="예: 국어"></td>
+      </tr>
+      <tr>
+        <td class="label">특수학급</td>
+        <td>
+          <select id="solSpecial">
+            <option>예</option><option>아니오</option>
+          </select>
+        </td>
+      </tr>
+    </table>
+    <button onclick="solveProblem()">예측하기</button>
+    <div id="solutionResult" style="margin-top:10px;"></div>
+  </div>
+
+<script>
+  // 목/금은 6교시까지만
+  const timetable = {
+    "월":["체육","도덕","국어","미술","역사","과학","가정"],
+    "화":["국어","체육","역사","과학","영어","음악","가정"],
+    "수":["수학","영어","도덕","사회","자율","동아리","수학"],
+    "목":["과학","국어","영어","기술","미술","스포츠 클럽"],
+    "금":["국어","사회","과학","체육","수학","영어"]
+  };
+  const special = {
+    "월":[3,6,7], "화":[1,2,4,5], "수":[1,2,4,5,7],
+    "목":[1,2,3,4,5,6], "금":[1,2,3,4,5,6]
+  };
+
+  function showTab(idx){
+    document.querySelectorAll('.tab-button').forEach((b,i)=>{
+      b.classList.toggle('active', i===idx);
+      document.querySelectorAll('.tab-content')[i].classList.toggle('active', i===idx);
+    });
+  }
+
+  // 문제 분해: 해당 요일 배열 길이만큼 row 생성
+  function renderDecomposition(){
+    const day = document.getElementById('daySelect').value;
+    const subs = timetable[day];
+    let html = `<h4>${day}요일</h4>
+      <table><tr><th>교시</th><th>입력</th></tr>`;
+    subs.forEach((_, idx) => {
+      const per = idx+1;
+      const bg = special[day].includes(per) ? '#fdd' : '';
+      html += `<tr>
+        <td>${per}교시</td>
+        <td><input id="dec${per}" style="background:${bg}" placeholder="과목명"></td>
+      </tr>`;
+    });
+    html += `</table>`;
+    document.getElementById('decompTable').innerHTML = html;
+  }
+
+  function checkDecomposition(){
+    const day = document.getElementById('daySelect').value;
+    const subs = timetable[day];
+    let out = '';
+    subs.forEach((ans, idx) => {
+      const per = idx+1;
+      const val = document.getElementById(`dec${per}`).value.trim();
+      out += `${per}교시: ` +
+        (val===ans ? '<span class="correct">정답</span>' : '<span class="incorrect">오답</span>') +
+        '<br>';
+    });
+    document.getElementById('decompResult').innerHTML = out;
+  }
+
+  function checkPattern(){
+    const sel = document.getElementById('patternSelect').value;
+    document.getElementById('patternResult').innerHTML =
+      sel==='p1' ? '<span class="correct">맞았어요!</span>' : '<span class="incorrect">다시 생각해보세요.</span>';
+  }
+
+  // 문제 해결용 교시 옵션 갱신
+  function updatePeriodOptions(){
+    const day = document.getElementById('solDay').value;
+    const sel = document.getElementById('solPeriod');
+    sel.innerHTML = '';
+    timetable[day].forEach((_, idx) => {
+      const per = idx+1;
+      const opt = document.createElement('option');
+      opt.value = per; opt.text = `${per}교시`;
+      sel.append(opt);
+    });
+  }
+
+  function solveProblem(){
+    const day = document.getElementById('solDay').value;
+    const period = parseInt(document.getElementById('solPeriod').value);
+    const subj = document.getElementById('solSubject').value.trim();
+    const sp   = document.getElementById('solSpecial').value;
+    const real = timetable[day][period-1];
+    let msg;
+
+    if(subj !== real){
+      msg = '<span class="incorrect">과목명이 일치하지 않습니다.</span>';
     }
-  </script>
+    else if(special[day].includes(period) && sp==='아니오'){
+      msg = '<span class="incorrect">이 교시는 특수학급 수업입니다.</span>';
+    }
+    else if(!special[day].includes(period) && sp==='예'){
+      msg = '<span class="incorrect">이 교시는 특수학급 수업이 아닙니다.</span>';
+    }
+    else if(sp==='예'){
+      msg = '<span class="correct">정답! → 특수학급 교실</span>';
+    }
+    else {
+      let room='일반교실';
+      if(subj==='체육') room='운동장';
+      else if(subj==='음악') room='음악실';
+      else if(subj==='미술') room='미술실';
+      else if(subj==='과학') room='과학실';
+      msg = `<span class="correct">정답! → ${room}</span>`;
+    }
+
+    document.getElementById('solutionResult').innerHTML = msg;
+  }
+
+  // 초기화
+  window.onload = ()=>{
+    renderDecomposition();
+    showTab(0);
+    updatePeriodOptions();
+  };
+</script>
 </body>
 </html>

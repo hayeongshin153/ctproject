@@ -1,181 +1,346 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>오늘은 어디로 가야할까? 수업 장소를 찾아라!</title>
+  <meta charset="UTF-8"/>
+  <title>시간표 이미지 + 수업장소 자동분석 CT 활동</title>
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; margin: 30px; }
-    h1 { color: darkblue; }
-    .section { margin-bottom: 20px; }
-    .box { border: 2px solid #888; padding: 10px; background-color: #f0f0f0; }
-    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-    table, th, td { border: 1px solid #333; padding: 8px; text-align: center; }
-    .timer { font-size: 20px; color: red; }
-    .highlight { background-color: #cfe2f3; }
-    .correct { background-color: #d4edda; }
-    .incorrect { background-color: #f8d7da; }
+    body { font-family:"맑은 고딕",sans-serif; margin:20px; }
+    .tabs { display:flex; margin-bottom:12px; }
+    .tab-button {
+      padding:8px 16px; margin-right:4px;
+      background:#f5f5f5; border:1px solid #ccc; cursor:pointer;
+    }
+    .tab-button.active {
+      background:#fff; border-bottom:1px solid #fff; font-weight:bold;
+    }
+    .tab-content { display:none; border:1px solid #ccc; padding:16px; }
+    .tab-content.active { display:block; }
+    table{border-collapse:collapse;width:100%;margin:12px 0;}
+    th,td{border:1px solid #999;padding:8px;text-align:center;}
+    th{background:#eee;}
+    .highlight{background:#e0efff;}
+    .correct{color:green;} .incorrect{color:red;}
+    .form-table{width:60%;margin-top:10px;}
+    .form-table td{padding:6px;} .form-table td.label{width:100px;font-weight:bold;}
+    #roomStatus { margin-left: 16px; font-weight: normal; }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2/dist/tesseract.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-  <h1>오늘은 어디로 가야할까? 수업 장소를 찾아라!</h1>
-  <h2>대상 및 교과: 자폐성장애학생(특수)</h2>
 
-  <div class="section">
-    <h3>문제 상황</h3>
-    <div class="box">
-      길동이는 수업 시간마다 교실이 바뀌는 것이 아직 익숙하지 않아요.<br>
-      그래서 매일 아침, 오늘 하루 수업 시간마다 수업 장소를 미리 확인하면 마음이 훨씬 편해진대요.<br>
-      길동이와 오늘 교시마다 이동해야 할 수업 장소를 예측해보세요.
+  <h1>시간표 이미지 + 수업장소 자동분석 CT 활동</h1>
+
+  <div class="tabs">
+    <div class="tab-button active" onclick="showTab(0)">1. AI 학습</div>
+    <div class="tab-button" onclick="showTab(1)">2. 문제 분해</div>
+    <div class="tab-button" onclick="showTab(2)">3. 패턴 인식</div>
+    <div class="tab-button" onclick="showTab(3)">4. 문제 해결</div>
+  </div>
+
+  <div class="tab-content active">
+    <h3>📌 AI 학습 (이미지 & 수업장소 파일 업로드)</h3>
+    <p>1) <b>시간표 이미지</b> 업로드 → 2) <b>과목-수업장소</b> 파일(.csv/.xlsx) 업로드 → 3) <b>분석 시작</b> 버튼 클릭</p>
+    <div>
+      <input type="file" id="imgInput" accept="image/*"/>
+      <input type="file" id="roomFile" accept=".csv, .xlsx"/>
+      <button onclick="processFiles()">분석 시작</button>
+      <span id="roomStatus"></span>
     </div>
+    <div id="ocrStatus" style="margin-top:8px;"></div>
+    <h4>학습된 규칙</h4>
+    <ul id="learnedRules"></ul>
+    <canvas id="canvas" style="display:none;"></canvas>
   </div>
 
-  <div class="section">
-    <h3>지켜야할 규칙</h3>
-    <ul>
-      <li>① 색칠된 수업은 특수학급 교실에서 진행합니다.</li>
-      <li>② 색칠되지 않은 수업은 일반 교실 또는 별도의 장소에서 진행됩니다.</li>
-      <li>③ 과목별 수업 장소는 아래와 같습니다.</li>
-    </ul>
-    <table>
-      <tr><th>과목</th><th>장소</th></tr>
-      <tr><td>체육</td><td>운동장</td></tr>
-      <tr><td>과학</td><td>과학실</td></tr>
-      <tr><td>음악</td><td>음악실</td></tr>
-      <tr><td>미술</td><td>미술실</td></tr>
-      <tr><td>스포츠 클럽</td><td>탁구장</td></tr>
-      <tr><td>그외 과목</td><td>교실</td></tr>
-    </table>
-  </div>
-
-  <div class="section">
-    <h3>길동이의 시간표</h3>
-    <table>
-      <tr><th>교시</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th></tr>
-      <tr><td>1교시</td><td>체육</td><td class="highlight">국어</td><td>수학</td><td class="highlight">과학</td><td>국어</td></tr>
-      <tr><td>2교시</td><td>도덕</td><td>체육</td><td class="highlight">영어</td><td>국어</td><td>사회</td></tr>
-      <tr><td>3교시</td><td class="highlight">국어</td><td>역사</td><td>도덕</td><td class="highlight">영어</td><td class="highlight">과학</td></tr>
-      <tr><td>4교시</td><td>미술</td><td>과학</td><td class="highlight">사회</td><td>기술</td><td>체육</td></tr>
-      <tr><td>5교시</td><td class="highlight">역사</td><td class="highlight">영어</td><td>자율</td><td>미술</td><td class="highlight">수학</td></tr>
-      <tr><td>6교시</td><td>과학</td><td>음악</td><td class="highlight">동아리</td><td><span>스포츠 클럽</span></td><td class="highlight">영어</td></tr>
-      <tr><td>7교시</td><td class="highlight">가정</td><td>가정</td><td></td><td class="highlight">수학</td><td></td></tr>
-    </table>
-  </div>
-
-  <div class="section">
-    <h3>문제 해결</h3>
-    <label>도전 요일 선택:
-      <select id="daySelect" onchange="generateProblem()">
-        <option value="월">월요일</option>
-        <option value="화">화요일</option>
-        <option value="수">수요일</option>
-        <option value="목">목요일</option>
-        <option value="금" selected>금요일</option>
-      </select>
-    </label><br><br>
-
-    <label>시간 선택:
-      <select id="timeSelect">
-        <option value="30">30초</option>
-        <option value="60">1분</option>
-        <option value="90">1분 30초</option>
-        <option value="120">2분</option>
-      </select>
+  <div class="tab-content">
+    <h3>📌 문제 분해</h3>
+    <label>요일 선택:
+      <select id="daySelect" onchange="renderDecomposition()"></select>
     </label>
-    <button onclick="startChallenge()">시작</button>
-    <p class="timer" id="countdown"></p>
-
-    <form id="answerForm">
-      <table>
-        <thead><tr><th>교시</th><th>과목</th><th>장소 (직접 입력)</th></tr></thead>
-        <tbody id="questionRows"></tbody>
-      </table>
-      <button type="button" onclick="checkAnswers()">정답 확인</button>
-    </form>
+    <div id="decompTable" style="margin-top:10px;"></div>
+    <button onclick="checkDecomposition()">정답 확인</button>
+    <div id="decompResult" style="margin-top:10px;"></div>
   </div>
 
-  <script>
-    let timer;
-    const timetable = {
-      '월': ['체육', '도덕', '국어', '미술', '역사', '과학', '가정'],
-      '화': ['국어', '체육', '역사', '과학', '영어', '음악', '가정'],
-      '수': ['수학', '영어', '도덕', '사회', '자율', '동아리', ''],
-      '목': ['과학', '국어', '영어', '기술', '미술', '스포츠 클럽', '수학'],
-      '금': ['국어', '사회', '과학', '체육', '수학', '영어', '']
-    };
+  <div class="tab-content">
+    <h3>📌 패턴 인식</h3>
+    <p>시간표에서 반복되는 규칙을 고르세요:</p>
+    <select id="patternSelect">
+      <option value="">--선택--</option>
+      <option value="p1">모든 색칠된 과목은 특수학급 교실</option>
+      <option value="p2">모든 색칠되지 않은 과목은 과목별 교실</option>
+    </select>
+    <button onclick="checkPattern()">제출</button>
+    <div id="patternResult" style="margin-top:10px;"></div>
+  </div>
 
-    const highlighted = {
-      '월': [false, false, true, false, true, false, true],
-      '화': [true, false, false, false, true, false, false],
-      '수': [false, true, false, true, false, true, false],
-      '목': [false, false, true, false, false, false, true],
-      '금': [false, false, true, false, true, true, false]
-    };
+  <div class="tab-content">
+    <h3>📌 문제 해결</h3>
+    <table class="form-table">
+      <tr>
+        <td class="label">요일</td>
+        <td><select id="solDay" onchange="updateSolutionPeriods()"></select></td>
+      </tr>
+      <tr>
+        <td class="label">교시</td>
+        <td><select id="solPeriod"></select></td>
+      </tr>
+      <tr>
+        <td class="label">과목명</td>
+        <td><input type="text" id="solSubject" placeholder="예: 국어"/></td>
+      </tr>
+      <tr>
+        <td class="label">특수학급</td>
+        <td>
+          <select id="solSpecial">
+            <option>예</option><option>아니오</option>
+          </select>
+        </td>
+      </tr>
+    </table>
+    <button onclick="solveProblem()">예측하기</button>
+    <div id="solutionResult" style="margin-top:10px;"></div>
+  </div>
 
-    const locations = {
-      '체육': '운동장',
-      '과학': '과학실',
-      '음악': '음악실',
-      '미술': '미술실',
-      '스포츠 클럽': '탁구장',
-      '기타': '교실'
-    };
+<script>
+  let days=[], subjects=[], specialFlags=[], subjectToRoom={};
+  let roomFileLoaded = false;
 
-    function getLocation(subject, isHighlighted) {
-      return isHighlighted ? '특수학급' : (locations[subject] || locations['기타']);
+  function showTab(i){
+    document.querySelectorAll('.tab-button').forEach((b,idx)=>b.classList.toggle('active',idx===i));
+    document.querySelectorAll('.tab-content').forEach((c,idx)=>c.classList.toggle('active',idx===i));
+  }
+
+  // 17x17 중앙 평균 (경계 바깥 예외처리 추가)
+  function getAvgRGB(ctx, x, y, imgW, imgH) {
+    let r=0, g=0, b=0, n=0;
+    for(let dx=-8; dx<=8; dx++){
+      for(let dy=-8; dy<=8; dy++){
+        if(x+dx<0 || y+dy<0 || x+dx>=imgW || y+dy>=imgH) continue;
+        const d = ctx.getImageData(x+dx, y+dy, 1, 1).data;
+        if((d[0]<60&&d[1]<60&&d[2]<60) || (d[0]>245&&d[1]>245&&d[2]>245)) continue;
+        r+=d[0]; g+=d[1]; b+=d[2]; n++;
+      }
     }
+    if(n===0) return [255,255,255];
+    return [Math.round(r/n), Math.round(g/n), Math.round(b/n)];
+  }
 
-    function generateProblem() {
-      const day = document.getElementById("daySelect").value;
-      const subjects = timetable[day];
-      const marks = highlighted[day];
-      const tbody = document.getElementById("questionRows");
-      tbody.innerHTML = "";
-      subjects.forEach((subject, i) => {
-        if (subject !== '') {
-          const className = marks[i] ? 'highlight' : '';
-          tbody.innerHTML += `<tr><td>${i + 1}교시</td><td class="${className}">${subject}</td><td><input name="${i + 1}" /></td></tr>`;
-        }
+  function isBlueCell(r,g,b) {
+    return (Math.abs(r-45)<=20 && Math.abs(g-81)<=20 && Math.abs(b-173)<=20);
+  }
+
+  async function processFiles(){
+    const imgFile = document.getElementById('imgInput').files[0];
+    const roomFile = document.getElementById('roomFile').files[0];
+    if(!imgFile){ alert('시간표 이미지를 선택하세요.'); return; }
+    if(!roomFileLoaded){ alert('과목-수업장소 파일을 먼저 불러오세요.'); return; }
+    const status = document.getElementById('ocrStatus');
+    status.textContent='이미지 로딩...';
+
+    // Canvas에 그리기
+    const img = new Image();
+    img.src = URL.createObjectURL(imgFile);
+    await img.decode();
+    const cnv = document.getElementById('canvas');
+    cnv.width=img.width; cnv.height=img.height;
+    const ctx = cnv.getContext('2d');
+    ctx.drawImage(img,0,0);
+
+    status.textContent='OCR 중...';
+    const worker = Tesseract.createWorker({ logger:m=>console.log(m) });
+    await worker.load();
+    await worker.loadLanguage('kor');
+    await worker.initialize('kor');
+
+    const cols=6, rows=8;
+    const cw=img.width/cols, ch=img.height/rows;
+    days=["월","화","수","목","금"];
+    subjects=Array.from({length:7},()=>Array(5).fill(''));
+    specialFlags=Array.from({length:7},()=>Array(5).fill(false));
+
+    for(let p=0;p<7;p++){
+      for(let d=0;d<5;d++){
+        // 삼각형 공백 셀 예외처리 (목,금 7교시만 스킵)
+        if(p===6 && d>=3) continue;
+
+        // 더 아래/오른쪽 파란 배경 부분
+        const x = (d+1)*cw + cw*0.9;
+        const y = (p+2)*ch + ch*0.9;
+        const [r,g,b] = getAvgRGB(ctx, x, y, img.width, img.height);
+
+        const blue = isBlueCell(r,g,b);
+        console.log(`(${days[d]}, ${p+1}교시):`, r, g, b, "isBlue=", blue);
+        specialFlags[p][d] = blue;
+
+        const rect={
+          left: Math.round((d+1)*cw),
+          top:  Math.round((p+2)*ch),
+          width: Math.round(cw),
+          height: Math.round(ch)
+        };
+        const {data:{text}} = await worker.recognize(cnv, { rectangle:rect });
+        subjects[p][d] = text.replace(/\s+/g,'').replace(/[^가-힣]/g,'').trim();
+      }
+    }
+    await worker.terminate();
+
+    status.textContent='학습 시작...';
+    runLearning();
+    status.textContent='학습 완료!';
+  }
+
+  document.getElementById('roomFile').addEventListener('change', function(){
+    const file = this.files[0];
+    if(!file) return;
+    const status = document.getElementById('roomStatus');
+    status.textContent='불러오는 중...';
+    const ext = file.name.split('.').pop().toLowerCase();
+    if(ext==='csv'){
+      PapaParseRoomFile(file, status);
+    } else if(ext==='xlsx'){
+      readXlsxRoomFile(file, status);
+    } else {
+      status.textContent='지원하지 않는 파일 형식입니다.';
+      roomFileLoaded = false;
+    }
+  });
+
+  function PapaParseRoomFile(file, status){
+    Papa.parse(file, {
+      header: true,
+      complete: function(results) {
+        subjectToRoom = {};
+        results.data.forEach(row => {
+          if(row['과목'] && row['장소']) subjectToRoom[row['과목'].trim()] = row['장소'].trim();
+        });
+        status.textContent = '수업장소 정보가 등록되었습니다!';
+        roomFileLoaded = true;
+      },
+      error: function(){ status.textContent='파싱 오류!'; roomFileLoaded=false; }
+    });
+  }
+
+  function readXlsxRoomFile(file, status){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, {type:'array'});
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+      const json = XLSX.utils.sheet_to_json(firstSheet);
+      subjectToRoom = {};
+      json.forEach(row => {
+        if(row['과목'] && row['장소']) subjectToRoom[String(row['과목']).trim()] = String(row['장소']).trim();
       });
-    }
+      status.textContent = '수업장소 정보가 등록되었습니다!';
+      roomFileLoaded = true;
+    };
+    reader.onerror = function(){ status.textContent='읽기 오류!'; roomFileLoaded=false; }
+    reader.readAsArrayBuffer(file);
+  }
 
-    function startChallenge() {
-      let seconds = parseInt(document.getElementById("timeSelect").value);
-      const countdown = document.getElementById("countdown");
-      countdown.textContent = `남은 시간: ${seconds}초`;
-
-      clearInterval(timer);
-      timer = setInterval(() => {
-        seconds--;
-        countdown.textContent = `남은 시간: ${seconds}초`;
-        if (seconds <= 0) {
-          clearInterval(timer);
-          if (confirm("시간이 종료되었습니다! 다시 도전하시겠어요?")) {
-            generateProblem();
-            startChallenge();
-          }
-        }
-      }, 1000);
-    }
-
-    function checkAnswers() {
-      const day = document.getElementById("daySelect").value;
-      const subjects = timetable[day];
-      const marks = highlighted[day];
-      const rows = document.querySelectorAll("#questionRows tr");
-      rows.forEach((row, i) => {
-        const subject = subjects[i];
-        const isHighlighted = marks[i];
-        const input = row.querySelector("input");
-        const correct = getLocation(subject, isHighlighted);
-        if (input.value.trim() === correct) {
-          input.className = "correct";
-        } else {
-          input.className = "incorrect";
-        }
+  function runLearning(){
+    const spec=[];
+    specialFlags.forEach((row,p)=>{
+      row.forEach((fl,d)=>{
+        if(fl) spec.push(`(${days[d]}, ${p+1}교시)`);
       });
-    }
+    });
+    const roomTable = Object.entries(subjectToRoom).map(
+      ([k,v])=>`${k}:${v}`).join(', ');
+    const rules=[
+      `특수학급 교시 = [${spec.join(', ')}]`,
+      `과목별 장소 = {${roomTable||'정보없음'}}`
+    ];
+    document.getElementById('learnedRules').innerHTML =
+      rules.map(r=>`<li>${r}</li>`).join('');
 
-    window.onload = generateProblem;
-  </script>
+    document.getElementById('daySelect').innerHTML =
+      days.map(d=>`<option>${d}</option>`).join('');
+    renderDecomposition();
+
+    document.getElementById('solDay').innerHTML =
+      days.map(d=>`<option>${d}</option>`).join('');
+    updateSolutionPeriods();
+
+    showTab(1);
+  }
+
+  function renderDecomposition(){
+    const day=document.getElementById('daySelect').value;
+    const dIdx=days.indexOf(day);
+    let html=`<h4>${day}요일</h4>
+      <table><tr><th>교시</th><th>입력</th></tr>`;
+    subjects.forEach((row,p)=>{
+      const bg = specialFlags[p][dIdx]? '#fdd':'';
+      html+=`<tr>
+        <td>${p+1}교시</td>
+        <td><input id="dec${p}" style="background:${bg}" placeholder="과목명"></td>
+      </tr>`;
+    });
+    html+='</table>';
+    document.getElementById('decompTable').innerHTML=html;
+  }
+  function checkDecomposition(){
+    const day=document.getElementById('daySelect').value;
+    const dIdx=days.indexOf(day);
+    let out='';
+    subjects.forEach((row,p)=>{
+      const corr=row[dIdx];
+      const val=document.getElementById(`dec${p}`).value.trim();
+      out+=`${p+1}교시: `+
+        (val===corr?'<span class="correct">정답</span>':'<span class="incorrect">오답</span>')+
+        '<br>';
+    });
+    document.getElementById('decompResult').innerHTML=out;
+  }
+
+  function checkPattern(){
+    const sel=document.getElementById('patternSelect').value;
+    document.getElementById('patternResult').innerHTML =
+      sel==='p1'?'<span class="correct">맞았습니다!</span>'
+               :'<span class="incorrect">다시 생각해보세요.</span>';
+  }
+
+  function updateSolutionPeriods(){
+    const day=document.getElementById('solDay').value;
+    const dIdx=days.indexOf(day);
+    const sel=document.getElementById('solPeriod');
+    sel.innerHTML='';
+    subjects.forEach((row,p)=>{
+      if(row[dIdx]) sel.add(new Option(`${p+1}교시`,p));
+    });
+  }
+  function solveProblem(){
+    const dIdx=days.indexOf(document.getElementById('solDay').value);
+    const pIdx=parseInt(document.getElementById('solPeriod').value);
+    const subj=document.getElementById('solSubject').value.trim();
+    const isS=document.getElementById('solSpecial').value==='예';
+    const corr=subjects[pIdx][dIdx];
+    let msg;
+    if(subj!==corr){
+      msg='<span class="incorrect">과목명이 일치하지 않습니다.</span>';
+    }
+    else if(specialFlags[pIdx][dIdx]&&!isS){
+      msg='<span class="incorrect">이 교시는 특수학급 수업입니다.</span>';
+    }
+    else if(!specialFlags[pIdx][dIdx]&&isS){
+      msg='<span class="incorrect">이 교시는 특수학급 수업이 아닙니다.</span>';
+    }
+    else if(isS){
+      msg='<span class="correct">정답! → 특수학급 교실</span>';
+    }
+    else {
+      const room= subjectToRoom[corr]||'일반교실';
+      msg=`<span class="correct">정답! → ${room}</span>`;
+    }
+    document.getElementById('solutionResult').innerHTML=msg;
+  }
+
+  window.onload=()=>{ showTab(0); };
+</script>
+
 </body>
 </html>
