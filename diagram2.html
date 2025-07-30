@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>컴퓨팅 사고력 문제 해결 도식</title>
+  <style>
+    body {
+      font-family: "Noto Sans KR", sans-serif;
+      background-color: #f9f9f9;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .diagram-box {
+      max-width: 700px;
+      margin: 0 auto;
+      border: 2px solid #3498db;
+      border-radius: 12px;
+      padding: 25px;
+      background-color: #ffffff;
+    }
+
+    h2 {
+      color: #2e86de;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .step {
+      margin-bottom: 20px;
+    }
+
+    .step-title {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .arrow {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .box {
+      background-color: #eaf2f8;
+      border: 1px solid #3498db;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .final-box {
+      background-color: #d5f5e3;
+      border: 2px solid #2ecc71;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .pattern-table {
+      border-collapse: collapse;
+      margin: 0 auto 10px auto;
+    }
+
+    .pattern-table th, .pattern-table td {
+      border: 1px solid #ccc;
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+
+    .pattern-table th {
+      background-color: #f2f2f2;
+    }
+
+    .center {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="diagram-box">
+    <h2>💻 컴퓨팅 사고 기반 수업 장소 예측 도식</h2>
+
+    <div class="step">
+      <div class="step-title">1️⃣ 문제 분해 (Decomposition)</div>
+      <div class="box">입력: 요일, 교시<br>→ 해당 시간의 과목을 찾아야 해!</div>
+    </div>
+
+    <div class="arrow">⬇️</div>
+
+    <div class="step">
+      <div class="step-title">2️⃣ 추상화 (Abstraction)</div>
+      <div class="box">전체 시간표에서 해당 요일과 교시에 해당하는 과목만 추출</div>
+    </div>
+
+    <div class="arrow">⬇️</div>
+
+    <div class="step">
+      <div class="step-title">3️⃣ 패턴 인식 (Pattern Recognition)</div>
+      <table class="pattern-table">
+        <tr><th>색칠 O/X</th><th>장소</th></tr>
+        <tr><td>O</td><td>특수학급 수업</td></tr>
+        <tr><td>X</td><td>일반교실 또는 특별실 수업</td></tr>
+      </table>
+    </div>
+
+    <div class="arrow">⬇️</div>
+
+    <div class="step">
+      <div class="step-title">4️⃣ 알고리즘 (Algorithm)</div>
+      <div class="box">과목명 → 장소 규칙 적용 → 최종 수업 장소 출력</div>
+    </div>
+
+    <div class="arrow">⬇️</div>
+
+    <div class="final-box box">🏫 출력: 현재 수업 장소는 “OOO”입니다!</div>
+  </div>
+</body>
+</html>

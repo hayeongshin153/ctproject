@@ -36,7 +36,7 @@
     <div class="tab-button active" onclick="showTab(0)">1. AI 학습</div>
     <div class="tab-button" onclick="showTab(1)">2. 문제 분해</div>
     <div class="tab-button" onclick="showTab(2)">3. 패턴 인식</div>
-    <div class="tab-button" onclick="showTab(3)">4. 문제 해결</div>
+    <div class="tab-button" onclick="showTab(3)">4. 알고리즘</div>
   </div>
 
   <div class="tab-content active">
@@ -76,33 +76,96 @@
     <div id="patternResult" style="margin-top:10px;"></div>
   </div>
 
-  <div class="tab-content">
-    <h3>📌 문제 해결</h3>
-    <table class="form-table">
-      <tr>
-        <td class="label">요일</td>
-        <td><select id="solDay" onchange="updateSolutionPeriods()"></select></td>
-      </tr>
-      <tr>
-        <td class="label">교시</td>
-        <td><select id="solPeriod"></select></td>
-      </tr>
-      <tr>
-        <td class="label">과목명</td>
-        <td><input type="text" id="solSubject" placeholder="예: 국어"/></td>
-      </tr>
-      <tr>
-        <td class="label">특수학급</td>
-        <td>
-          <select id="solSpecial">
-            <option>예</option><option>아니오</option>
-          </select>
-        </td>
-      </tr>
-    </table>
-    <button onclick="solveProblem()">예측하기</button>
-    <div id="solutionResult" style="margin-top:10px;"></div>
-  </div>
+<!-- 알고리즘 탭 -->
+<div class="tab-content">
+  <h3>📌 알고리즘</h3>
+  <p>요일·교시·과목명·특수학급 여부를 선택하고, 해당 교시에 가야할 장소를 예측해 보세요.</p>
+
+  <table>
+    <tr>
+      <td>무슨 요일인가요?</td>
+      <td>
+        <select id="algo-day">
+          <option>월</option><option>화</option><option>수</option>
+          <option>목</option><option>금</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>몇 교시인가요?</td>
+      <td>
+        <select id="algo-period">
+          <option>1교시</option><option>2교시</option><option>3교시</option>
+          <option>4교시</option><option>5교시</option><option>6교시</option>
+          <option>7교시</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>과목명은 무엇인가요?</td>
+      <td><input type="text" id="algo-subject" placeholder="예: 국어"></td>
+    </tr>
+    <tr>
+      <td>특수학급 수업인가요?</td>
+      <td>
+        <select id="algo-special">
+          <option>예</option>
+          <option>아니오</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td><b>예상되는 수업 장소를 선택하세요.</b></td>
+      <td>
+        <select id="algo-prediction">
+          <option>특수학급</option>
+          <option>일반학급</option>
+          <option>운동장</option>
+          <option>음악실</option>
+          <option>과학실</option>
+          <option>미술실</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+
+  <button onclick="checkAlgorithmAnswer()">정답 확인</button>
+  <div id="algo-result" style="margin-top:10px;"></div>
+</div>
+
+<script>
+function checkAlgorithmAnswer() {
+  const day = document.getElementById("algo-day").value;
+  const period = document.getElementById("algo-period").value;
+  const subject = document.getElementById("algo-subject").value.trim();
+  const isSpecial = document.getElementById("algo-special").value;
+  const predicted = document.getElementById("algo-prediction").value;
+
+  let correctPlace = "일반학급";  // 기본값
+
+  if (isSpecial === "예") {
+    correctPlace = "특수학급";
+  } else {
+    // 과목 기반 장소 지정
+    if (subject.includes("체육")) {
+      correctPlace = "운동장";
+    } else if (subject.includes("음악")) {
+      correctPlace = "음악실";
+    } else if (subject.includes("과학")) {
+      correctPlace = "과학실";
+    } else if (subject.includes("미술")) {
+      correctPlace = "미술실";
+    }
+  }
+
+  const resultDiv = document.getElementById("algo-result");
+  if (predicted === correctPlace) {
+    resultDiv.innerHTML = `<span style="color:green;font-weight:bold;">정답입니다! ✅ (${correctPlace})</span>`;
+  } else {
+    resultDiv.innerHTML = `<span style="color:red;font-weight:bold;">오답입니다 ❌<br>정답은 [${correctPlace}]입니다.</span>`;
+  }
+}
+</script>
 
 <script>
   let days=[], subjects=[], specialFlags=[], subjectToRoom={};

@@ -54,11 +54,24 @@
     </tbody>
   </table>
 
+<div style="margin-top: 10px; font-size: 0.95em;">
+  <p style="color:#444;">
+    🔷 <strong>색칠된 시간</strong>은 특수학급 수업 시간입니다.
+  </p>
+  <p style="color:#444;">
+    📍 <strong>다음 과목은 지정 장소로 이동하세요</strong> →  
+    체육: <span style="color:#2e86c1;">운동장</span>,  
+    음악: <span style="color:#af7ac5;">음악실</span>,  
+    미술: <span style="color:#f39c12;">미술실</span>,  
+    과학: <span style="color:#27ae60;">과학실</span>
+  </p>
+</div>
+
   <!-- 탭 버튼 -->
   <div class="tabs">
     <div class="tab-button active" onclick="showTab(0)">1. 문제 분해</div>
     <div class="tab-button" onclick="showTab(1)">2. 패턴 인식</div>
-    <div class="tab-button" onclick="showTab(2)">3. 문제 해결</div>
+    <div class="tab-button" onclick="showTab(2)">3. 알고리즘</div>
   </div>
 
   <!-- 1. 문제 분해 -->
@@ -81,48 +94,104 @@
     <p>시간표에서 반복되는 규칙을 찾아 아래 보기 중 하나를 고르세요.</p>
     <select id="patternSelect">
       <option value="">--선택--</option>
-      <option value="p1">모든 색칠된 과목은 특수학급 교실</option>
-      <option value="p2">모든 일반 과목은 과목별 교실</option>
-      <option value="p3">가정 수업은 매주 7교시</option>
+      <option value="p1">모든 색칠된 과목은 특수학급 수업이다.</option>
+      <option value="p2">모든 색칠된 과목은 일반교실 수업이다.</option>
+      <option value="p3">가정 수업은 매주 7교시이다.</option>
     </select>
     <button onclick="checkPattern()">제출</button>
     <div id="patternResult" style="margin-top:10px;"></div>
   </div>
 
-  <!-- 3. 문제 해결 -->
-  <div class="tab-content">
-    <h3>📌 문제 해결</h3>
-    <p>요일·교시·과목명·특수학급 여부를 선택하고, 갈 장소를 예측해 보세요.</p>
-    <table class="form-table">
-      <tr>
-        <td class="label">요일</td>
-        <td>
-          <select id="solDay" onchange="updatePeriodOptions()">
-            <option>월</option><option>화</option><option>수</option>
-            <option>목</option><option>금</option>
-          </select>
-        </td>
-      </tr>
-      <tr>
-        <td class="label">교시</td>
-        <td><select id="solPeriod"></select></td>
-      </tr>
-      <tr>
-        <td class="label">과목명</td>
-        <td><input type="text" id="solSubject" placeholder="예: 국어"></td>
-      </tr>
-      <tr>
-        <td class="label">특수학급</td>
-        <td>
-          <select id="solSpecial">
-            <option>예</option><option>아니오</option>
-          </select>
-        </td>
-      </tr>
-    </table>
-    <button onclick="solveProblem()">예측하기</button>
-    <div id="solutionResult" style="margin-top:10px;"></div>
-  </div>
+  <!-- 알고리즘 탭 -->
+<div class="tab-content">
+  <h3>📌 알고리즘</h3>
+  <p>요일·교시·과목명·특수학급 여부를 선택하고, 해당 교시에 가야할 장소를 예측해 보세요.</p>
+
+  <table>
+    <tr>
+      <td>무슨 요일인가요?</td>
+      <td>
+        <select id="algo-day">
+          <option>월</option><option>화</option><option>수</option>
+          <option>목</option><option>금</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>몇 교시인가요?</td>
+      <td>
+        <select id="algo-period">
+          <option>1교시</option><option>2교시</option><option>3교시</option>
+          <option>4교시</option><option>5교시</option><option>6교시</option>
+          <option>7교시</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>과목명은 무엇인가요?</td>
+      <td><input type="text" id="algo-subject" placeholder="예: 국어"></td>
+    </tr>
+    <tr>
+      <td>특수학급 수업인가요?</td>
+      <td>
+        <select id="algo-special">
+          <option>예</option>
+          <option>아니오</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td><b>예상되는 수업 장소를 선택하세요.</b></td>
+      <td>
+        <select id="algo-prediction">
+          <option>특수학급</option>
+          <option>일반학급</option>
+          <option>운동장</option>
+          <option>음악실</option>
+          <option>과학실</option>
+          <option>미술실</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+
+  <button onclick="checkAlgorithmAnswer()">정답 확인</button>
+  <div id="algo-result" style="margin-top:10px;"></div>
+</div>
+
+<script>
+function checkAlgorithmAnswer() {
+  const day = document.getElementById("algo-day").value;
+  const period = document.getElementById("algo-period").value;
+  const subject = document.getElementById("algo-subject").value.trim();
+  const isSpecial = document.getElementById("algo-special").value;
+  const predicted = document.getElementById("algo-prediction").value;
+
+  let correctPlace = "일반학급";  // 기본값
+
+  if (isSpecial === "예") {
+    correctPlace = "특수학급";
+  } else {
+    // 과목 기반 장소 지정
+    if (subject.includes("체육")) {
+      correctPlace = "운동장";
+    } else if (subject.includes("음악")) {
+      correctPlace = "음악실";
+    } else if (subject.includes("과학")) {
+      correctPlace = "과학실";
+    } else if (subject.includes("미술")) {
+      correctPlace = "미술실";
+    }
+  }
+
+  const resultDiv = document.getElementById("algo-result");
+  if (predicted === correctPlace) {
+    resultDiv.innerHTML = `<span style="color:green;font-weight:bold;">정답입니다! ✅ (${correctPlace})</span>`;
+  } else {
+    resultDiv.innerHTML = `<span style="color:red;font-weight:bold;">오답입니다 ❌<br>정답은 [${correctPlace}]입니다.</span>`;
+  }
+}
+</script>
 
 <script>
   // 목/금은 6교시까지만

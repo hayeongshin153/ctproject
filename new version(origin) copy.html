@@ -176,7 +176,7 @@
     </div>
     <!-- 추상화 탭 -->
     <div id="tabbox1" class="box" style="display:none">
-      <b>추상화 단계: 주요 특징 선택</b>
+      <b>이 중 홍길동 선생님의 특징과 일치하는 것만 선택해보세요.</b>
       <div style="margin:18px 0;">
         <label><input type="checkbox" id="abs1"> 바지를 입고 있다</label><br>
         <label><input type="checkbox" id="abs2"> 책을 들고 있지 않다</label><br>
@@ -189,18 +189,83 @@
       <span id="abstraction-feedback" style="margin-left:16px; font-weight:bold;"></span>
     </div>
     <!-- 패턴(규칙) 찾기 탭 -->
-    <div id="tabbox2" class="box" style="display:none">
-      <b>패턴(규칙) 찾기 단계 (예시)</b>
-      <div style="margin:16px 0 0 0;">조건을 순서대로 적용하며 남은 후보를 확인해 보세요.<br>
-      <span class="hint">아래 '다음 조건 적용'을 누르면 필터링이 진행됩니다.</span></div>
-      <div id="pattern-steps" class="pattern-step-list"></div>
-      <div id="pattern-candidates" style="margin:14px 0;font-weight:bold;">남은 후보: ①, ②, ③, ④</div>
-      <button id="pattern-next" class="btn">다음 조건 적용</button>
-      <button id="pattern-reset" class="btn reset">초기화</button>
-    </div>
+<div id="tabbox2" class="box" style="display:none">
+  <b>패턴(규칙) 찾기 단계 (예시)</b>
+  <div style="margin:16px 0 0 0;">
+    조건을 순서대로 적용하며 남은 후보를 확인해 보세요.<br>
+    <span class="hint">아래 '다음 조건 적용'을 누르면 필터링이 진행됩니다.</span>
+  </div>
+
+  <!-- 조건 진행 상황 -->
+  <div id="pattern-progress" style="margin:10px 0; font-weight:bold;">
+    현재 적용된 조건: <span id="applied-count">0</span> / <span id="total-count">3</span>
+  </div>
+
+  <!-- 조건 적용 단계 표시 -->
+  <div id="pattern-steps" class="pattern-step-list"></div>
+
+  <!-- 남은 후보 표시 -->
+  <div id="pattern-candidates" style="margin:14px 0;font-weight:bold;">
+    남은 후보: ①, ②, ③, ④
+  </div>
+
+  <!-- 조건 적용 해설 -->
+  <div id="pattern-explanation" style="margin:10px 0; color:#2c3e50; font-size:14px; font-style:italic;">
+    (조건이 적용되면 해설이 여기에 표시됩니다.)
+  </div>
+
+  <!-- 버튼 -->
+  <button id="pattern-next" class="btn">다음 조건 적용</button>
+  <button id="pattern-reset" class="btn reset">초기화</button>
+</div>
+
+<script>
+  // 예시 데이터
+  const conditions = [
+    { text: "바지를 입고 있는가?", eliminate: ["②"] },
+    { text: "책을 들고 있지 않은가?", eliminate: ["③"] },
+    { text: "안경을 쓰고 있는가?", eliminate: ["①"] }
+  ];
+
+  let currentStep = 0;
+  let remainingCandidates = ["①", "②", "③", "④"];
+
+  document.getElementById("total-count").textContent = conditions.length;
+
+  document.getElementById("pattern-next").addEventListener("click", () => {
+    if (currentStep < conditions.length) {
+      const condition = conditions[currentStep];
+      currentStep++;
+
+      // 후보 제거
+      condition.eliminate.forEach(candidate => {
+        const index = remainingCandidates.indexOf(candidate);
+        if (index > -1) remainingCandidates.splice(index, 1);
+      });
+
+      // 진행 상황 업데이트
+      document.getElementById("applied-count").textContent = currentStep;
+      document.getElementById("pattern-candidates").textContent = `남은 후보: ${remainingCandidates.join(", ")}`;
+      document.getElementById("pattern-steps").innerHTML += `<div>조건 ${currentStep}: ${condition.text}</div>`;
+      document.getElementById("pattern-explanation").textContent = `${condition.eliminate.join(", ")}번 후보는 조건 '${condition.text}'을(를) 만족하지 않아 제외되었습니다.`;
+    } else {
+      document.getElementById("pattern-explanation").textContent = "모든 조건이 적용되었습니다.";
+    }
+  });
+
+  document.getElementById("pattern-reset").addEventListener("click", () => {
+    currentStep = 0;
+    remainingCandidates = ["①", "②", "③", "④"];
+    document.getElementById("applied-count").textContent = currentStep;
+    document.getElementById("pattern-candidates").textContent = "남은 후보: ①, ②, ③, ④";
+    document.getElementById("pattern-steps").innerHTML = "";
+    document.getElementById("pattern-explanation").textContent = "(조건이 적용되면 해설이 여기에 표시됩니다.)";
+  });
+</script>
+
     <!-- 알고리즘 탭 (과정 시각화 추가) -->
     <div id="tabbox3" class="box" style="display:none">
-      <b>알고리즘 단계 (예시)</b>
+      <b>알고리즘 단계</b>
       <div style="margin:16px 0 10px 0;">정답을 찾아 문서를 전달할 선생님을 선택하세요.</div>
       <div class="radio-wrap">
         <label><input type="radio" name="answer" value="1"> 1번</label>

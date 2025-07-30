@@ -6,7 +6,7 @@ st.title('This is SHY Webapp!!')
 
 
 
-col1, col2 = st.columns((4, 1))
+col1, col2 = st.columns((3, 1))  # 예: 왼쪽이 75%, 오른쪽이 25%
 
 with col1:
     with st.expander('누구에게 문서를 전해줘야할까?'):
@@ -26,8 +26,25 @@ with col1:
         components.html(html, height=800, scrolling=True)
 
 with col2:
-    with st.expander('Tips..'):
-        st.info('Tips..')
+    with st.expander('Tips1..'):
+        st.info('Tips for Problem 1')
+
+        with open("diagram1.html", "r", encoding="utf-8") as f:
+            html = f.read()
+        components.html(html, height=900, scrolling=True)
+
+    with st.expander('Tips2..'):
+        st.info('Tips for Problem 2')
+
+        with open("diagram2.html", "r", encoding="utf-8") as f:
+            html = f.read()
+        components.html(html, height=900, scrolling=True)
+
+    with st.expander("Tips3.."):
+        st.info("Tips for Problem 3")
+        st.image("diagram3.png", use_container_width=True)
+
+
 
 st.markdown('<hr>', unsafe_allow_html=True)
 st.write('<font color="BLUE">(c)copyright. all rights reserved by SHY</font>', unsafe_allow_html=True)
