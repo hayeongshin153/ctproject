@@ -26,22 +26,22 @@ with col1:
         components.html(html, height=800, scrolling=True)
 
 with col2:
-    with st.expander('Tips1..'):
-        st.info('Tips for Problem 1')
+    with st.expander('Tips for Problem 1'):
+        st.info('CT사고력기반문제해결 과정')
 
         with open("diagram1.html", "r", encoding="utf-8") as f:
             html = f.read()
         components.html(html, height=900, scrolling=True)
 
-    with st.expander('Tips2..'):
-        st.info('Tips for Problem 2')
+    with st.expander('Tips for Problem 2'):
+        st.info('CT사고력기반문제해결 과정')
 
         with open("diagram2.html", "r", encoding="utf-8") as f:
             html = f.read()
         components.html(html, height=900, scrolling=True)
 
-    with st.expander("Tips3.."):
-        st.info("Tips for Problem 3")
+    with st.expander("Tips for Problem 3"):
+        st.info("AI 처리 과정")
         st.image("diagram3.png", use_container_width=True)
 
 
