@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>컴퓨팅 사고력 문제 해결 도식</title>
+  <title>컴퓨팅 사고력 기반 수업 장소 예측 도식</title>
   <style>
     body {
       font-family: "Noto Sans KR", sans-serif;
@@ -83,14 +83,19 @@
 
     <div class="step">
       <div class="step-title">1️⃣ 문제 분해 (Decomposition)</div>
-      <div class="box">입력: 요일, 교시<br>→ 해당 시간의 과목을 찾아야 해!</div>
+      <div class="box">
+        전체 시간표에서 <strong>요일, 교시, 과목명, 특수학급 여부, 이동 수업 여부</strong> 정보를 분리해요.
+      </div>
     </div>
 
     <div class="arrow">⬇️</div>
 
     <div class="step">
       <div class="step-title">2️⃣ 추상화 (Abstraction)</div>
-      <div class="box">전체 시간표에서 해당 요일과 교시에 해당하는 과목만 추출</div>
+      <div class="box">
+        해당 요일의 교시에 해당하는 과목만 남기고<br>
+        <strong>특수학급 여부, 이동 수업 여부(체육·음악·미술·과학)</strong>만 남겨서 간단한 정보로 정리해요.
+      </div>
     </div>
 
     <div class="arrow">⬇️</div>
@@ -98,9 +103,10 @@
     <div class="step">
       <div class="step-title">3️⃣ 패턴 인식 (Pattern Recognition)</div>
       <table class="pattern-table">
-        <tr><th>색칠 O/X</th><th>장소</th></tr>
-        <tr><td>O</td><td>특수학급 수업</td></tr>
-        <tr><td>X</td><td>일반교실 또는 특별실 수업</td></tr>
+        <tr><th>조건</th><th>설명</th></tr>
+        <tr><td>색칠된 시간</td><td>특수학급 수업 (우선 적용)</td></tr>
+        <tr><td>과목이 체육·미술·음악·과학</td><td>특별실 수업 (운동장, 미술실 등)</td></tr>
+        <tr><td>그 외 과목</td><td>일반 교실 수업</td></tr>
       </table>
     </div>
 
@@ -108,7 +114,11 @@
 
     <div class="step">
       <div class="step-title">4️⃣ 알고리즘 (Algorithm)</div>
-      <div class="box">과목명 → 장소 규칙 적용 → 최종 수업 장소 출력</div>
+      <div class="box">
+        <strong>if 특수학급이라면 → "특수학급"</strong><br>
+        else if 이동 과목이라면 → 과목별 장소 적용<br>
+        else → "일반학급"
+      </div>
     </div>
 
     <div class="arrow">⬇️</div>
