@@ -9,7 +9,7 @@ st.set_page_config(layout='wide', page_title='컴퓨팅사고력 문제 by SHY')
 st.markdown("""
     <div style="background-color:#f0f8ff;padding:20px;border-radius:10px;margin-bottom:20px;">
         <h1 style="text-align:center;color:#1c3f95;">🧠 컴퓨팅사고력 문제 해결 웹앱 by SHY</h1>
-        <p style="text-align:center; font-size:18px; color:gray;">이미지 분석 + AI 예측 기반 교육 활동</p>
+        <p style="text-align:center; font-size:18px; color:gray;">컴퓨팅사고력 기반 문제해결 교육 활동</p>
     </div>
 """, unsafe_allow_html=True)
 
