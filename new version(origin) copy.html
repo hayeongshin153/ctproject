@@ -4,39 +4,88 @@
   <meta charset="UTF-8">
   <title>누구에게 문서를 전달해야할까?</title>
   <style>
-    body { 
-      background: #f6f7fb; 
-      font-family: '맑은 고딕', sans-serif; 
-      margin:0; 
+    body {
+      background: #f6f7fb;
+      font-family: '맑은 고딕', sans-serif;
+      margin: 0;
       padding: 0;
     }
-    .container { 
+    .container {
       max-width: 98vw;
       width: 98vw;
       background: #fff;
-      margin: 20px auto; 
-      border-radius: 18px; 
-      box-shadow: 0 6px 24px #dde2ed88; 
+      margin: 20px auto;
+      border-radius: 18px;
+      box-shadow: 0 6px 24px #dde2ed88;
       padding: 0 0 32px 0;
     }
     .mainimg { width: 100%; border-radius: 18px 18px 0 0; }
-    .tabs { display: flex; margin: 18px 0 0 0; }
-    .tab { flex:1; text-align:center; cursor:pointer; padding: 13px 0; font-weight: bold; border-bottom: 2.5px solid #e0e0e0; background: #f6f8fa;}
-    .tab.active { color: #1f5fd1; border-bottom: 3px solid #1f5fd1; background: #f8fbff;}
-    .box { margin:24px 24px 0 24px; padding:22px; background:#f8fafc; border-radius:14px; min-height:170px;}
-    .title { margin: 32px 0 0 0; text-align:center; font-size:1.5em; font-weight: bold; color:#0a297a; }
-    .subtitle { text-align:center; color:#325e97; font-weight: 500; margin-bottom:18px;}
-    .timer { margin: 14px 0; text-align:center;}
-    .timer label { font-weight:bold; margin: 0 9px 0 0; }
-    .timer button { margin: 0 4px; padding:7px 20px; font-size:1em; border-radius:8px; border:1.5px solid #d2d5dd; background: #f6f7fc; cursor:pointer; font-weight:bold;}
-    .timer button.selected { background: #295ce2; color:#fff; border-color: #2149ad;}
-    .timer span { display:inline-block; margin-left:14px; color:#21732a; font-weight:bold; font-size:1.2em;}
-    .radio-wrap {margin-top:18px;}
-    .radio-wrap label {margin-right: 20px;}
-    .success {color: #2c781a; font-weight:bold;}
-    .fail {color: #bb2124; font-weight:bold;}
-    .hint {color: #235a99; font-size:.93em;}
-    .remain { font-weight: bold; color: #21732a; margin-top: 8px;}
+    .tabs {
+      display: flex; margin: 18px 0 0 0;
+    }
+    .tab {
+      flex: 1; text-align: center; cursor: pointer; padding: 13px 0;
+      font-weight: bold; border-bottom: 2.5px solid #e0e0e0; background: #f6f8fa;
+    }
+    .tab.active {
+      color: #1f5fd1; border-bottom: 3px solid #1f5fd1; background: #f8fbff;
+    }
+    .box {
+      margin: 24px 24px 0 24px;
+      padding: 22px;
+      background: #f8fafc;
+      border-radius: 14px;
+      min-height: 170px;
+    }
+    .title {
+      margin: 32px 0 0 0;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #0a297a;
+    }
+    .subtitle {
+      text-align: center;
+      color: #325e97;
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+    .timer {
+      margin: 14px 0;
+      text-align: center;
+    }
+    .timer label {
+      font-weight: bold;
+      margin: 0 9px 0 0;
+    }
+    .timer button {
+      margin: 0 4px;
+      padding: 7px 20px;
+      font-size: 1em;
+      border-radius: 8px;
+      border: 1.5px solid #d2d5dd;
+      background: #f6f7fc;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .timer button.selected {
+      background: #295ce2;
+      color: #fff;
+      border-color: #2149ad;
+    }
+    .timer span {
+      display: inline-block;
+      margin-left: 14px;
+      color: #21732a;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    .radio-wrap { margin-top: 18px; }
+    .radio-wrap label { margin-right: 20px; }
+    .success { color: #2c781a; font-weight: bold; }
+    .fail { color: #bb2124; font-weight: bold; }
+    .hint { color: #235a99; font-size: .93em; }
+    .remain { font-weight: bold; color: #21732a; margin-top: 8px; }
     .situationbox {
       background: #f1f5fa;
       border-radius: 15px;
@@ -47,9 +96,6 @@
       font-size: 1.04em;
       color: #18365a;
       line-height: 1.7;
-    }
-    .situationbox b {
-      color: #1d3f8e;
     }
     .featurebox {
       background: #eaf4fd;
@@ -62,39 +108,41 @@
       color: #174a6c;
       line-height: 1.7;
     }
-    .featurebox b {
-      color: #1a77b7;
+    .featurebox ul { margin: 7px 0 0 0; padding-left: 17px; }
+    .featurebox li { margin-bottom: 2px; }
+    .drag-item {
+      background: #dbe8fa;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      cursor: grab;
+      font-size: 0.96em;
     }
-    .featurebox ul {margin: 7px 0 0 0; padding-left: 17px;}
-    .featurebox li {margin-bottom: 2px;}
-    .cond-table { width:100%; border-collapse: collapse; margin:18px 0;}
-    .cond-table th, .cond-table td { border:1px solid #d3e2ee; text-align:center;}
-    .cond-table th { background:#eaf0fb; font-weight:bold; }
-    .cond-table .cond-label { background:#fafdff; font-weight:500;}
-    .cond-table input[type="checkbox"] { width:19px; height:19px; vertical-align:middle; margin:4px 0 0 0; cursor:pointer;}
-    .cond-table thead tr:nth-child(1) th {
-      border-bottom:none;
-      background: #fafdff;
-      font-size:1em;
-      font-weight:600;
+    .drop-slot {
+      background: #ffffff;
+      border: 2px dashed #a3bcd9;
+      margin: 12px 0;
+      padding: 14px;
+      min-height: 45px;
+      border-radius: 8px;
+      font-size: 0.96em;
     }
-    .cond-table thead tr:nth-child(2) th {
-      border-top:none;
-      background: #fafdff;
-      font-size:1.09em;
-      font-weight:600;
-      padding-bottom: 7px;
+    .btn {
+      margin: 10px 8px 0 0;
+      padding: 8px 28px;
+      border-radius: 10px;
+      border: none;
+      font-size: 1em;
+      background: #3367e6;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
     }
-    .cond-table tbody td { height:34px; }
-    .btn {margin: 10px 8px 0 0; padding:8px 28px; border-radius:10px; border:none; font-size:1em; background:#3367e6; color:#fff; font-weight:bold; cursor:pointer;}
-    .btn.reset {background:#adb8c4;}
-    .pattern-step-list {margin: 10px 0 6px 0; padding:0;}
-    .pattern-step-list div {margin-bottom:3px;}
+    .btn.reset { background: #adb8c4; }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- 이미지 태그(필요시 base64로 삽입) -->
     <img src="image.png" class="mainimg" alt="문제 이미지">
     <div class="title">타이틀: 누구에게 문서를 전달해야할까?</div>
     <div class="subtitle">대상 및 교과: 중학교 (특수)</div>
@@ -120,6 +168,7 @@
         <li>안경을 쓰고 있다.</li>
       </ul>
     </div>
+
     <div class="tabs">
       <div class="tab active" id="tab-btn-0">문제분해</div>
       <div class="tab" id="tab-btn-1">추상화</div>
@@ -128,142 +177,139 @@
     </div>
     <!-- 문제분해 탭 -->
     <div id="tabbox0" class="box">
-      <div style="font-weight:bold;">문제분해: 조건별 표로 선생님 후보를 추려보세요.</div>
-      <div class="hint">각 칸을 학생이 직접 O(일치)로 체크하세요.<br>O표시만 모두 된 열이 남은 후보로 인정됩니다.</div>
-      <table class="cond-table">
-        <thead>
-          <tr>
-            <th rowspan="2" style="width:125px;">조건</th>
-            <th colspan="4">번호</th>
-          </tr>
-          <tr>
-            <th>①</th>
-            <th>②</th>
-            <th>③</th>
-            <th>④</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="cond-label">바지를 입고 있는가?</td>
-            <td><input type="checkbox" id="chk_1_0"></td>
-            <td><input type="checkbox" id="chk_2_0"></td>
-            <td><input type="checkbox" id="chk_3_0"></td>
-            <td><input type="checkbox" id="chk_4_0"></td>
-          </tr>
-          <tr>
-            <td class="cond-label">책을 들고 있지 않는가?</td>
-            <td><input type="checkbox" id="chk_1_1"></td>
-            <td><input type="checkbox" id="chk_2_1"></td>
-            <td><input type="checkbox" id="chk_3_1"></td>
-            <td><input type="checkbox" id="chk_4_1"></td>
-          </tr>
-          <tr>
-            <td class="cond-label">안경을 쓰고 있는가?</td>
-            <td><input type="checkbox" id="chk_1_2"></td>
-            <td><input type="checkbox" id="chk_2_2"></td>
-            <td><input type="checkbox" id="chk_3_2"></td>
-            <td><input type="checkbox" id="chk_4_2"></td>
-          </tr>
-          <tr>
-            <td colspan="5" style="background:#fafdff;">
-              <span style="color:#555;font-size:0.97em;">정답 기준: 각 열마다 O만 모두 체크된 경우에만 해당 선생님이 남은 후보입니다.</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- 정답 확인 버튼/피드백 없음 -->
-    </div>
-    <!-- 추상화 탭 -->
-    <div id="tabbox1" class="box" style="display:none">
-      <b>이 중 홍길동 선생님의 특징과 일치하는 것만 선택해보세요.</b>
-      <div style="margin:18px 0;">
-        <label><input type="checkbox" id="abs1"> 바지를 입고 있다</label><br>
-        <label><input type="checkbox" id="abs2"> 책을 들고 있지 않다</label><br>
-        <label><input type="checkbox" id="abs3"> 안경을 쓰고 있다</label><br>
-        <label><input type="checkbox" id="abs4"> 호루라기를 매고 있다</label><br>
-        <label><input type="checkbox" id="abs5"> 넥타이를 매고 있다</label><br>
-        <label><input type="checkbox" id="abs6"> 머리를 묶고 있다</label><br>
+      <div style="font-weight:bold;">문제분해: 문제 해결 순서를 올바르게 배열해보세요.</div>
+      <div class="hint">아래 단계 카드를 드래그하여 오른쪽 빈 칸에 순서대로 배치해보세요.</div>
+      <div style="display: flex; gap: 20px; margin-top: 20px;">
+        <!-- 드래그 카드 -->
+        <div id="drag-items" style="flex: 1; background: #f1f4f9; padding: 10px; border-radius: 10px;">
+          <div class="drag-item" draggable="true" data-id="2">홍길동 선생님의 3가지 특징(하의 종류, 안경, 책)을 확인한다.</div>
+          <div class="drag-item" draggable="true" data-id="1">4명의 선생님들의 특징을 확인한다.</div>
+          <div class="drag-item" draggable="true" data-id="3">홍길동 선생님의 3가지 특징과 비교하여 모두 해당하는 선생님을 찾는다.</div>
+        </div>
+        <!-- 드롭 슬롯 -->
+        <div id="drop-zone" style="flex: 1; background: #eef2f8; padding: 10px; border-radius: 10px; min-height: 180px;">
+          <div class="drop-slot" data-slot="1"><b>①</b> 순서 1</div>
+          <div class="drop-slot" data-slot="2"><b>②</b> 순서 2</div>
+          <div class="drop-slot" data-slot="3"><b>③</b> 순서 3</div>
+        </div>
       </div>
-      <button id="abstraction-btn" class="btn">정답 확인</button>
-      <span id="abstraction-feedback" style="margin-left:16px; font-weight:bold;"></span>
+      <button id="check-order" class="btn" style="margin-top: 20px;">정답 확인</button>
+      <button id="reset-order" class="btn reset" style="margin-top: 20px;">다시 하기</button>
+      <span id="order-feedback" style="margin-left:16px; font-weight:bold;"></span>
     </div>
-    <!-- 패턴(규칙) 찾기 탭 -->
-<div id="tabbox2" class="box" style="display:none">
-  <b>패턴(규칙) 찾기 단계</b>
-  <div style="margin:16px 0 0 0;">
-    조건을 순서대로 적용하며 남은 후보를 확인해 보세요.<br>
-    <span class="hint">아래 '다음 조건 적용'을 누르면 필터링이 진행됩니다.</span>
-  </div>
 
-  <!-- 조건 진행 상황 -->
-  <div id="pattern-progress" style="margin:10px 0; font-weight:bold;">
-    현재 적용된 조건: <span id="applied-count">0</span> / <span id="total-count">3</span>
-  </div>
+    <!-- 추상화 탭 -->
+    <div id="tabbox1" class="box" style="display:none;">
+      <div style="font-weight:bold;">추상화: 홍길동 선생님의 특징을 추려내보세요.</div>
+      <div class="hint">다음 보기 중, 홍길동 선생님을 찾기 위해 반드시 필요한 3가지 조건만 선택하세요. (복수 선택 가능)</div>
+      <form id="abstraction-form" style="margin-top:10px;">
+        <label><input type="checkbox" name="q" value="book" /> 📕 책을 들고 있지 않다</label><br>
+        <label><input type="checkbox" name="q" value="tie" /> 👔 넥타이를 매고 있다</label><br>
+        <label><input type="checkbox" name="q" value="pants" /> 👖 바지를 입고 있다</label><br>
+        <label><input type="checkbox" name="q" value="arms" /> 🙅‍♂️ 팔짱을 끼고 있다</label><br>
+        <label><input type="checkbox" name="q" value="shirt" /> 👕 셔츠를 입고 있다</label><br>
+        <label><input type="checkbox" name="q" value="glasses" /> 👓 안경을 쓰고 있다</label><br>
+      </form>
+      <button onclick="checkAbstraction()" class="btn" style="margin-top:10px;">정답 확인</button>
+      <button onclick="resetAbstraction()" class="btn" style="margin-top:10px; margin-left:10px;">다시 하기</button>
+      <div id="abstraction-feedback" style="margin-top:10px; font-weight:bold;"></div>
+    </div>
 
-  <!-- 조건 적용 단계 표시 -->
-  <div id="pattern-steps" class="pattern-step-list"></div>
+    <!-- 문제분해/추상화 드래그/체크 JS -->
+    <script>
+      // 문제분해 드래그앤드롭
+      let draggedItem = null;
+      const dragItems = document.querySelectorAll(".drag-item");
+      const dropSlots = document.querySelectorAll(".drop-slot");
+      const dragContainer = document.getElementById("drag-items");
 
-  <!-- 남은 후보 표시 -->
-  <div id="pattern-candidates" style="margin:14px 0;font-weight:bold;">
-    남은 후보: ①, ②, ③, ④
-  </div>
-
-  <!-- 조건 적용 해설 -->
-  <div id="pattern-explanation" style="margin:10px 0; color:#2c3e50; font-size:14px; font-style:italic;">
-    (조건이 적용되면 해설이 여기에 표시됩니다.)
-  </div>
-
-  <!-- 버튼 -->
-  <button id="pattern-next" class="btn">다음 조건 적용</button>
-  <button id="pattern-reset" class="btn reset">초기화</button>
-</div>
-
-<script>
-  // 예시 데이터
-  const conditions = [
-    { text: "바지를 입고 있는가?", eliminate: ["②"] },
-    { text: "책을 들고 있지 않은가?", eliminate: ["③"] },
-    { text: "안경을 쓰고 있는가?", eliminate: ["①"] }
-  ];
-
-  let currentStep = 0;
-  let remainingCandidates = ["①", "②", "③", "④"];
-
-  document.getElementById("total-count").textContent = conditions.length;
-
-  document.getElementById("pattern-next").addEventListener("click", () => {
-    if (currentStep < conditions.length) {
-      const condition = conditions[currentStep];
-      currentStep++;
-
-      // 후보 제거
-      condition.eliminate.forEach(candidate => {
-        const index = remainingCandidates.indexOf(candidate);
-        if (index > -1) remainingCandidates.splice(index, 1);
+      dragItems.forEach(item => {
+        item.addEventListener("dragstart", e => {
+          draggedItem = item;
+        });
       });
 
-      // 진행 상황 업데이트
-      document.getElementById("applied-count").textContent = currentStep;
-      document.getElementById("pattern-candidates").textContent = `남은 후보: ${remainingCandidates.join(", ")}`;
-      document.getElementById("pattern-steps").innerHTML += `<div>조건 ${currentStep}: ${condition.text}</div>`;
-      document.getElementById("pattern-explanation").textContent = `${condition.eliminate.join(", ")}번 후보는 조건 '${condition.text}'을(를) 만족하지 않아 제외되었습니다.`;
-    } else {
-      document.getElementById("pattern-explanation").textContent = "모든 조건이 적용되었습니다.";
-    }
-  });
+      dropSlots.forEach(slot => {
+        slot.addEventListener("dragover", e => e.preventDefault());
+        slot.addEventListener("drop", e => {
+          e.preventDefault();
+          if (draggedItem) {
+            slot.innerHTML = "";
+            slot.appendChild(draggedItem);
+            draggedItem = null;
+          }
+        });
+      });
 
-  document.getElementById("pattern-reset").addEventListener("click", () => {
-    currentStep = 0;
-    remainingCandidates = ["①", "②", "③", "④"];
-    document.getElementById("applied-count").textContent = currentStep;
-    document.getElementById("pattern-candidates").textContent = "남은 후보: ①, ②, ③, ④";
-    document.getElementById("pattern-steps").innerHTML = "";
-    document.getElementById("pattern-explanation").textContent = "(조건이 적용되면 해설이 여기에 표시됩니다.)";
-  });
-</script>
+      document.getElementById("check-order").addEventListener("click", () => {
+        const expectedOrder = ["2", "1", "3"];
+        let userOrder = [];
+        dropSlots.forEach(slot => {
+          const child = slot.querySelector(".drag-item");
+          if (child) userOrder.push(child.dataset.id);
+        });
+        const correct = expectedOrder.every((val, idx) => userOrder[idx] === val);
+        document.getElementById("order-feedback").innerHTML = correct
+          ? '<span class="success">정답입니다!</span>'
+          : '<span class="fail">순서가 틀렸습니다.</span>';
+      });
 
-    <!-- 알고리즘 탭 (과정 시각화 추가) -->
+      document.getElementById("reset-order").addEventListener("click", () => {
+        dragItems.forEach(item => {
+          dragContainer.appendChild(item);
+        });
+        dropSlots.forEach((slot, idx) => {
+          slot.innerHTML = `<b>${"①②③"[idx]}</b> 순서 ${idx + 1}`;
+        });
+        document.getElementById("order-feedback").innerHTML = "";
+      });
+
+      // 추상화 확인
+      function checkAbstraction() {
+        const correct = ["pants", "book", "glasses"];
+        const checked = Array.from(document.querySelectorAll('input[name="q"]:checked')).map(cb => cb.value);
+        const isCorrect = correct.length === checked.length && correct.every(val => checked.includes(val));
+        const feedback = document.getElementById("abstraction-feedback");
+
+        if (isCorrect) {
+          feedback.innerHTML = '<span class="success">정답입니다! 필요한 정보만 정확히 추렸어요 🎉</span>';
+        } else {
+          const missed = correct.filter(c => !checked.includes(c));
+          const extra = checked.filter(c => !correct.includes(c));
+          feedback.innerHTML = '<span class="fail">정답이 아닙니다.<br>' +
+            (missed.length ? `❗ 빠뜨린 조건: ${missed.join(", ")}<br>` : "") +
+            (extra.length ? `⚠️ 불필요한 조건 선택됨: ${extra.join(", ")}` : "") +
+            '</span>';
+        }
+      }
+
+      function resetAbstraction() {
+        document.querySelectorAll('input[name="q"]').forEach(cb => cb.checked = false);
+        document.getElementById("abstraction-feedback").innerHTML = "";
+      }
+    </script>
+    <!-- 패턴(규칙) 찾기 탭 -->
+    <div id="tabbox2" class="box" style="display:none">
+      <b>패턴(규칙) 찾기 단계</b>
+      <div style="margin:16px 0 0 0;">
+        조건을 순서대로 적용하며 남은 후보를 확인해 보세요.<br>
+        <span class="hint">아래 '다음 조건 적용'을 누르면 필터링이 진행됩니다.</span>
+      </div>
+      <div id="pattern-progress" style="margin:10px 0; font-weight:bold;">
+        현재 적용된 조건: <span id="applied-count">0</span> / <span id="total-count">3</span>
+      </div>
+      <div id="pattern-steps" class="pattern-step-list"></div>
+      <div id="pattern-candidates" style="margin:14px 0;font-weight:bold;">
+        남은 후보: ①, ②, ③, ④
+      </div>
+      <div id="pattern-explanation" style="margin:10px 0; color:#2c3e50; font-size:14px; font-style:italic;">
+        (조건이 적용되면 해설이 여기에 표시됩니다.)
+      </div>
+      <button id="pattern-next" class="btn">다음 조건 적용</button>
+      <button id="pattern-reset" class="btn reset">초기화</button>
+    </div>
+
+    <!-- 알고리즘 탭 -->
     <div id="tabbox3" class="box" style="display:none">
       <b>알고리즘 단계</b>
       <div style="margin:16px 0 10px 0;">정답을 찾아 문서를 전달할 선생님을 선택하세요.</div>
@@ -277,144 +323,140 @@
       <div id="algorithm-process" style="margin:16px 0 0 0; font-size:0.98em; color:#224;"></div>
       <span id="algorithm-feedback" style="margin-left:8px; font-weight:bold;"></span>
     </div>
-  </div>
-<script>
-  // 탭 함수
-  function showTab(idx) {
-    for(let i=0; i<4; i++) {
-      document.querySelectorAll('.tab')[i].classList.remove('active');
-      document.getElementById('tabbox'+i).style.display = (i===idx)?"block":"none";
-    }
-    document.querySelectorAll('.tab')[idx].classList.add('active');
-    if(idx===2) showPatternStatus();
-  }
-  // 타이머
-  let timer = null, timerValue = 0, timerRemain = 0;
-  function setTimer(sec, btn) {
-    timerValue = sec;
-    timerRemain = sec;
-    updateTimer();
-    document.querySelectorAll('.timer button').forEach(b=>b.classList.remove('selected'));
-    if(btn) btn.classList.add('selected');
-    if(timer) clearInterval(timer);
-    timer = setInterval(function(){
-      timerRemain--;
-      updateTimer();
-      if(timerRemain<=0) {
-        clearInterval(timer);
-        alert("⏰ 시간이 종료되었습니다!\n다시 도전하려면 시간을 선택하세요.");
-        document.querySelectorAll('.timer button').forEach(b=>b.classList.remove('selected'));
+
+    <script>
+      // 탭 전환 함수
+      function showTab(idx) {
+        for (let i = 0; i < 4; i++) {
+          document.querySelectorAll('.tab')[i].classList.remove('active');
+          document.getElementById('tabbox' + i).style.display = (i === idx) ? "block" : "none";
+        }
+        document.querySelectorAll('.tab')[idx].classList.add('active');
+        if (idx === 2) showPatternStatus();
       }
-    },1000);
-  }
-  function updateTimer() {
-    document.getElementById('timer_display').innerText = 
-      `${Math.floor(timerRemain/60)}:${String(timerRemain%60).padStart(2,'0')}`;
-  }
-  updateTimer();
 
-  // 추상화 탭
-  function checkAbstractionAnswer() {
-    const right = [1,2,3].map(n => document.getElementById('abs'+n).checked).every(v => v);
-    const wrong = [4,5,6].some(n => document.getElementById('abs'+n).checked);
-    let feedback = '';
-    if (right && !wrong) {
-      feedback = '<span class="success">정답입니다!</span>';
-    } else {
-      feedback = '<span class="fail">정답이 아닙니다.</span>';
-    }
-    document.getElementById('abstraction-feedback').innerHTML = feedback;
-  }
-  // 패턴(규칙) 찾기
-  const teachers = [
-    { no: 1, 바지: false, 책: false, 안경: true },
-    { no: 2, 바지: true, 책: true, 안경: true },
-    { no: 3, 바지: true, 책: false, 안경: true },
-    { no: 4, 바지: true, 책: false, 안경: false }
-  ];
-  const patternSteps = [
-    { label: "바지를 입고 있다", key: "바지", value: true },
-    { label: "책을 들고 있지 않다", key: "책", value: false },
-    { label: "안경을 쓰고 있다", key: "안경", value: true }
-  ];
-  let patternIdx = 0;
-  let candidates = [1,2,3,4];
-  function showPatternStatus() {
-    let txt = '남은 후보: ';
-    txt += candidates.length ? candidates.map(n => `①②③④`[n-1]).join(', ') : '없음';
-    document.getElementById('pattern-candidates').innerHTML = txt;
-    let stepInfo = '';
-    for (let i = 0; i < patternSteps.length; i++) {
-      stepInfo += `<div>${i+1}. ${patternSteps[i].label} ${i < patternIdx ? "✔️" : ""}</div>`;
-    }
-    document.getElementById('pattern-steps').innerHTML = stepInfo;
-  }
-  // 알고리즘 탭
-  function checkAlgorithmAnswer() {
-    const teachers = [
-      { no: 1, 바지: false, 책: false, 안경: true },
-      { no: 2, 바지: true, 책: true, 안경: true },
-      { no: 3, 바지: true, 책: false, 안경: true },
-      { no: 4, 바지: true, 책: false, 안경: false }
-    ];
-    let processMsg = "<b>알고리즘 처리 과정:</b><br>";
-    let current = [...teachers];
-    processMsg += "초기 후보: " + current.map(t=>`<b>${t.no}번</b>`).join(', ') + "<br>";
-    // (이어서) 알고리즘 탭
-    current = current.filter(t => t.바지);
-    processMsg += "① 바지를 입고 있는 후보: " + (current.length?current.map(t=>`<b>${t.no}번</b>`).join(', ') : '없음') + "<br>";
-    current = current.filter(t => !t.책);
-    processMsg += "② 책을 들고 있지 않은 후보: " + (current.length?current.map(t=>`<b>${t.no}번</b>`).join(', ') : '없음') + "<br>";
-    current = current.filter(t => t.안경);
-    processMsg += "③ 안경을 쓰고 있는 후보: " + (current.length?current.map(t=>`<b>${t.no}번</b>`).join(', ') : '없음') + "<br>";
-    let rightNo = current.length ? current[0].no : null;
-    processMsg += "<b>최종 남은 후보: " + (current.length?`${current[0].no}번`:"없음") + "</b>";
-    document.getElementById('algorithm-process').innerHTML = processMsg;
-    const radios = document.getElementsByName('answer');
-    let userPick = null;
-    for(let r of radios) if(r.checked) userPick = parseInt(r.value);
-    let feedback = '';
-    if(!userPick) {
-      feedback = '<span class="fail">번호를 선택하세요.</span>';
-    } else if(userPick === rightNo) {
-      feedback = '<span class="success">정답입니다!</span>';
-    } else {
-      feedback = '<span class="fail">정답이 아닙니다.</span>';
-    }
-    document.getElementById('algorithm-feedback').innerHTML = feedback;
-  }
+      // 타이머
+      let timer = null, timerValue = 0, timerRemain = 0;
+      function setTimer(sec, btn) {
+        timerValue = sec;
+        timerRemain = sec;
+        updateTimer();
+        document.querySelectorAll('.timer button').forEach(b => b.classList.remove('selected'));
+        if (btn) btn.classList.add('selected');
+        if (timer) clearInterval(timer);
+        timer = setInterval(function () {
+          timerRemain--;
+          updateTimer();
+          if (timerRemain <= 0) {
+            clearInterval(timer);
+            alert("⏰ 시간이 종료되었습니다!\n다시 도전하려면 시간을 선택하세요.");
+            document.querySelectorAll('.timer button').forEach(b => b.classList.remove('selected'));
+          }
+        }, 1000);
+      }
 
-  document.addEventListener('DOMContentLoaded', function() {
-    // 탭 이벤트 연결
-    for(let i=0;i<4;i++) {
-      document.getElementById('tab-btn-'+i).addEventListener('click', function(){ showTab(i); });
-    }
-    // 타이머 버튼
-    document.getElementById('timer-btn-30').onclick = function(){setTimer(30, this);};
-    document.getElementById('timer-btn-60').onclick = function(){setTimer(60, this);};
-    document.getElementById('timer-btn-90').onclick = function(){setTimer(90, this);};
-    document.getElementById('timer-btn-120').onclick = function(){setTimer(120, this);};
-    // 추상화 버튼
-    document.getElementById('abstraction-btn').onclick = checkAbstractionAnswer;
-    // 알고리즘 버튼
-    document.getElementById('algorithm-btn').onclick = checkAlgorithmAnswer;
-    // 패턴탭 버튼
-    document.getElementById('pattern-next').onclick = function() {
-      if (patternIdx >= patternSteps.length) return;
-      const step = patternSteps[patternIdx];
-      candidates = candidates.filter(n =>
-        teachers.find(t=>t.no===n)[step.key] === step.value
-      );
-      patternIdx++;
-      showPatternStatus();
-    };
-    document.getElementById('pattern-reset').onclick = function() {
-      patternIdx = 0;
-      candidates = [1,2,3,4];
-      showPatternStatus();
-    };
-    showPatternStatus();
-  });
-</script>
+      function updateTimer() {
+        document.getElementById('timer_display').innerText =
+          `${Math.floor(timerRemain / 60)}:${String(timerRemain % 60).padStart(2, '0')}`;
+      }
+
+      // 알고리즘 확인
+      function checkAlgorithmAnswer() {
+        const teachers = [
+          { no: 1, 바지: false, 책: false, 안경: true },
+          { no: 2, 바지: true, 책: true, 안경: true },
+          { no: 3, 바지: true, 책: false, 안경: true },
+          { no: 4, 바지: true, 책: false, 안경: false }
+        ];
+        let processMsg = "<b>알고리즘 처리 과정:</b><br>";
+        let current = [...teachers];
+        processMsg += "초기 후보: " + current.map(t => `<b>${t.no}번</b>`).join(', ') + "<br>";
+        current = current.filter(t => t.바지);
+        processMsg += "① 바지를 입고 있는 후보: " + (current.length ? current.map(t => `<b>${t.no}번</b>`).join(', ') : '없음') + "<br>";
+        current = current.filter(t => !t.책);
+        processMsg += "② 책을 들고 있지 않은 후보: " + (current.length ? current.map(t => `<b>${t.no}번</b>`).join(', ') : '없음') + "<br>";
+        current = current.filter(t => t.안경);
+        processMsg += "③ 안경을 쓰고 있는 후보: " + (current.length ? current.map(t => `<b>${t.no}번</b>`).join(', ') : '없음') + "<br>";
+        let rightNo = current.length ? current[0].no : null;
+        processMsg += "<b>최종 남은 후보: " + (current.length ? `${current[0].no}번` : "없음") + "</b>";
+        document.getElementById('algorithm-process').innerHTML = processMsg;
+
+        const radios = document.getElementsByName('answer');
+        let userPick = null;
+        for (let r of radios) if (r.checked) userPick = parseInt(r.value);
+        let feedback = '';
+        if (!userPick) {
+          feedback = '<span class="fail">번호를 선택하세요.</span>';
+        } else if (userPick === rightNo) {
+          feedback = '<span class="success">정답입니다!</span>';
+        } else {
+          feedback = '<span class="fail">정답이 아닙니다.</span>';
+        }
+        document.getElementById('algorithm-feedback').innerHTML = feedback;
+      }
+
+      // 패턴 탭 관련
+      const teachers = [
+        { no: 1, 바지: false, 책: false, 안경: true },
+        { no: 2, 바지: true, 책: true, 안경: true },
+        { no: 3, 바지: true, 책: false, 안경: true },
+        { no: 4, 바지: true, 책: false, 안경: false }
+      ];
+      const patternSteps = [
+        { label: "바지를 입고 있다", key: "바지", value: true },
+        { label: "책을 들고 있지 않다", key: "책", value: false },
+        { label: "안경을 쓰고 있다", key: "안경", value: true }
+      ];
+      let patternIdx = 0;
+      let candidates = [1, 2, 3, 4];
+      function showPatternStatus() {
+        document.getElementById('applied-count').innerText = patternIdx;
+        document.getElementById('total-count').innerText = patternSteps.length;
+        document.getElementById('pattern-candidates').innerText = "남은 후보: " + (candidates.length ? candidates.map(n => `①②③④`[n - 1]).join(", ") : "없음");
+        let stepInfo = '';
+        for (let i = 0; i < patternSteps.length; i++) {
+          stepInfo += `<div>${i + 1}. ${patternSteps[i].label} ${i < patternIdx ? "✔️" : ""}</div>`;
+        }
+        document.getElementById('pattern-steps').innerHTML = stepInfo;
+        document.getElementById('pattern-explanation').innerText = patternIdx > 0
+          ? `${patternSteps[patternIdx - 1].label} 조건을 만족하지 않는 후보 제외`
+          : '(조건이 적용되면 해설이 여기에 표시됩니다.)';
+      }
+
+      // DOM 로딩 후 이벤트 바인딩
+      document.addEventListener('DOMContentLoaded', function () {
+        // 탭 이벤트
+        for (let i = 0; i < 4; i++) {
+          document.getElementById('tab-btn-' + i).addEventListener('click', function () { showTab(i); });
+        }
+        // 타이머
+        document.getElementById('timer-btn-30').onclick = function () { setTimer(30, this); };
+        document.getElementById('timer-btn-60').onclick = function () { setTimer(60, this); };
+        document.getElementById('timer-btn-90').onclick = function () { setTimer(90, this); };
+        document.getElementById('timer-btn-120').onclick = function () { setTimer(120, this); };
+        updateTimer();
+
+        // 알고리즘 확인
+        document.getElementById('algorithm-btn').onclick = checkAlgorithmAnswer;
+
+        // 패턴탭
+        document.getElementById('pattern-next').onclick = function () {
+          if (patternIdx >= patternSteps.length) return;
+          const step = patternSteps[patternIdx];
+          candidates = candidates.filter(n =>
+            teachers.find(t => t.no === n)[step.key] === step.value
+          );
+          patternIdx++;
+          showPatternStatus();
+        };
+        document.getElementById('pattern-reset').onclick = function () {
+          patternIdx = 0;
+          candidates = [1, 2, 3, 4];
+          showPatternStatus();
+        };
+        showPatternStatus();
+      });
+    </script>
+  </div> <!-- .container -->
 </body>
 </html>
