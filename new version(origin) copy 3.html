@@ -98,6 +98,7 @@
     <label><input type="checkbox" class="pattern-check" value="move">체육·음악·미술·과학은 지정된 다른 장소로 이동해야 한다.</label><br>
     <label><input type="checkbox" class="pattern-check" value="wrong2">국어·수학·영어·도덕은 이동해야 한다.</label><br>
     <button onclick="checkPatternVisual()">정답 보기</button>
+    <div id="patternResult" style="margin-top:10px;"></div>
   </div>
 
   <!-- 4. 알고리즘 -->
@@ -231,9 +232,18 @@ function checkAbstraction() {
 function checkPatternVisual() {
   clearPatternBorders();
   const selected = Array.from(document.querySelectorAll('.pattern-check:checked')).map(cb => cb.value);
+
   if (selected.includes("special")) highlightSpecialSubjects();
   if (selected.includes("move")) highlightMovingSubjects();
+
+  const correctAnswers = ["special", "move"];
+  const isCorrect = correctAnswers.every(ans => selected.includes(ans)) && selected.length === correctAnswers.length;
+
+  document.getElementById("patternResult").innerHTML = isCorrect
+    ? "<span class='correct'>정답입니다! ✅</span>"
+    : "<span class='incorrect'>오답입니다 ❌</span>";
 }
+
 
 function clearPatternBorders() {
   document.querySelectorAll("td").forEach(td => {
